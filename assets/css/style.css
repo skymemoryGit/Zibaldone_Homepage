@@ -1,0 +1,437 @@
+/* =============================================================================
+ *  zibaldone.ch — style.css
+ *
+ *  Same shape as before: a wordmark, a search field, three chips, a quiet grid
+ *  of compact cards. The caption only exists on hover, as a floating tooltip.
+ *
+ *  What changed is the material, not the layout — warm paper-white instead of
+ *  a cold blue-white, a champagne accent instead of system blue, and a hairline
+ *  on every card so the grid reads as something set rather than something
+ *  floating on black.
+ * =========================================================================== */
+
+/* ---------------------------------------------------------------- tokens -- */
+:root {
+  --bg:        #080808;
+  --surface:   rgba(244, 241, 234, .035);
+  --surface-2: rgba(244, 241, 234, .062);
+
+  --line:      rgba(244, 241, 234, .085);   /* resting hairline, always drawn */
+  --line-2:    rgba(244, 241, 234, .17);    /* hover / active */
+
+  --ink:       #F2EFE9;   /* warm paper-white — never pure #FFF */
+  --ink-2:     #9A968E;
+  --ink-3:     #6B6862;
+
+  --accent:    #B9A77D;   /* champagne. The only colour on the page. */
+
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+          'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+
+  --r:     14px;
+  --pad:   clamp(20px, 5vw, 44px);
+  --maxw:  1180px;
+
+  --ease:  cubic-bezier(.32, .72, 0, 1);
+  --fast:  .2s;
+  --slow:  .4s;
+}
+
+/* ------------------------------------------------------------------ base -- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: -.012em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; }
+h1, h2, p { margin: 0; }
+[hidden] { display: none !important; }
+
+::selection { background: var(--accent); color: #0B0B0B; }
+
+:focus-visible { outline: 1.5px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
+
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 99;
+  background: var(--ink); color: var(--bg); padding: 10px 16px; font-weight: 500;
+}
+.skip-link:focus { left: 0; }
+
+/* one very faint pool of warm light, top-left. Nothing else. */
+.bg {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(56vmax 40vmax at 10% -10%, rgba(185, 167, 125, .085), transparent 70%);
+}
+
+.shell {
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding: clamp(56px, 12vh, 120px) var(--pad) 0;
+  display: flex; flex-direction: column;
+  min-height: 100svh;
+}
+
+/* ================================================================= HEADER == */
+.head { margin-bottom: clamp(22px, 3.4vw, 34px); }
+
+/* wordmark ---------------------------------------------------------------- */
+/* One sheen sweeps across on load and settles to flat. background-size:300%
+   means the visible window is a third of the gradient — at both ends that
+   window is solid ink, so only the pass itself shows. */
+.wordmark {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(44px, 11vw, 86px);
+  font-weight: 400;
+  letter-spacing: -.01em;
+  line-height: 1;
+  margin-bottom: clamp(6px, 1.4vw, 10px);
+  user-select: none;
+}
+
+/* tagline ------------------------------------------------------------------ */
+.tagline {
+  max-width: 46ch;
+  margin-bottom: clamp(26px, 5vw, 44px);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-3);
+  letter-spacing: -.006em;
+}
+.tagline__ch { color: var(--ink-2); }
+.wordmark span {
+  display: inline-block;
+  background: linear-gradient(100deg,
+              #F2EFE9   0%,
+              #F2EFE9  43%,
+              #B9A77D  52%,
+              #F2EFE9  62%,
+              #F2EFE9 100%);
+  background-size: 300% 100%;
+  background-position: 0 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: sheen 2.1s var(--ease) .2s both;
+}
+@keyframes sheen {
+  from { background-position: 100% 0; opacity: 0; transform: translateY(10px); }
+  30%  { opacity: 1; transform: none; }
+  to   { background-position: 0 0;    opacity: 1; transform: none; }
+}
+
+/* search ------------------------------------------------------------------ */
+.search { position: relative; display: flex; align-items: center; max-width: 440px; }
+
+.search__icon {
+  position: absolute; left: 14px; width: 16px; height: 16px;
+  color: var(--ink-3); pointer-events: none;
+  transition: color var(--fast) var(--ease);
+}
+.search:focus-within .search__icon { color: var(--accent); }
+
+.search__input {
+  width: 100%;
+  padding: 12px 40px 12px 40px;
+  font: inherit; font-size: 15px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  transition: background var(--fast) var(--ease), border-color var(--fast) var(--ease);
+  -webkit-appearance: none; appearance: none;
+}
+.search__input::placeholder { color: var(--ink-3); }
+.search__input:hover { border-color: var(--line-2); }
+.search__input:focus { outline: none; background: var(--surface-2); border-color: var(--line-2); }
+.search__input::-webkit-search-cancel-button { display: none; }
+
+.search__clear {
+  position: absolute; right: 9px;
+  display: grid; place-items: center;
+  width: 24px; height: 24px;
+  border: 0; border-radius: 50%;
+  background: rgba(244, 241, 234, .14); color: var(--ink);
+  cursor: pointer;
+  transition: background var(--fast) var(--ease);
+}
+.search__clear svg { width: 13px; height: 13px; }
+.search__clear:hover { background: rgba(244, 241, 234, .26); }
+
+/* toolbar ----------------------------------------------------------------- */
+.toolbar {
+  margin-top: clamp(22px, 4vw, 32px);
+  display: flex; align-items: center; gap: 10px;
+}
+
+.chips { display: flex; gap: 6px; min-width: 0; flex: 1 1 auto; }
+
+.chip {
+  padding: 7px 15px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 13.5px; font-weight: 500; letter-spacing: -.008em;
+  white-space: nowrap; cursor: pointer;
+  transition: color var(--fast) var(--ease),
+              background var(--fast) var(--ease),
+              border-color var(--fast) var(--ease);
+}
+.chip:hover { color: var(--ink); border-color: var(--line); }
+.chip[aria-selected="true"] {
+  color: var(--ink); background: var(--surface-2); border-color: var(--line);
+}
+
+.icon-btn {
+  flex: none;
+  display: grid; place-items: center;
+  width: 36px; height: 36px;
+  border: 0; border-radius: 50%;
+  background: transparent; color: var(--ink-3);
+  cursor: pointer;
+  transition: color var(--fast) var(--ease), background var(--fast) var(--ease);
+}
+.icon-btn svg { width: 17px; height: 17px; }
+.icon-btn:hover { color: var(--ink); background: var(--surface); }
+.icon-btn[aria-pressed="true"] { color: var(--accent); }
+.icon-btn[aria-pressed="true"] svg path { fill: currentColor; }
+
+@media (max-width: 700px) {
+  .chips {
+    overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    mask-image: linear-gradient(90deg, #000 calc(100% - 20px), transparent);
+  }
+  .chips::-webkit-scrollbar { display: none; }
+}
+
+/* =================================================================== MAIN == */
+.count {
+  font-size: 12.5px; color: var(--ink-3);
+  margin-bottom: 12px; min-height: 1em;
+  letter-spacing: -.005em;
+}
+
+.grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+@media (min-width: 640px)  { .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
+@media (min-width: 980px)  { .grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1300px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+
+/* ----------------------------------------------------------------- card -- */
+.card {
+  position: relative;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+  padding: 16px 17px;
+  background: var(--surface);
+  border: 1px solid var(--line);      /* always drawn — the grid is *set* */
+  border-radius: var(--r);
+  transition: background var(--fast) var(--ease),
+              border-color var(--fast) var(--ease),
+              transform var(--fast) var(--ease);
+  animation: in var(--slow) var(--ease) backwards;
+}
+@keyframes in { from { opacity: 0; transform: translateY(7px); } }
+
+/* transform makes a stacking context, so a hovered card must outrank its
+   later siblings or they paint over its tooltip */
+.card:hover, .card:focus-within {
+  background: var(--surface-2);
+  border-color: var(--line-2);
+  transform: translateY(-2px);
+  z-index: 20;
+}
+
+/* Dim the *text*, never the card — opacity on the card would fade the tooltip
+   inside it too, and a see-through tooltip is unreadable over the grid. */
+.card--soon .card__title { color: var(--ink-2); font-weight: 400; }
+.card--soon .card__meta  { color: #56534E; }
+
+.card__link { position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.card__link:focus-visible { outline-offset: -4px; }
+.card--soon .card__link { cursor: default; }
+
+.card__body { min-width: 0; display: flex; flex-direction: column; }
+
+.card__title {
+  font-size: 16px; font-weight: 500;
+  letter-spacing: -.021em; line-height: 1.3;
+}
+
+.card__meta {
+  margin-top: 3px;
+  font-size: 12.5px; color: var(--ink-3);
+  letter-spacing: -.004em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.card__aside { flex: none; display: flex; align-items: center; gap: 2px; color: var(--ink-3); }
+
+.card__ext {
+  width: 13px; height: 13px;
+  opacity: 0; transform: translateX(-3px);
+  transition: opacity var(--fast) var(--ease), transform var(--fast) var(--ease),
+              color var(--fast) var(--ease);
+}
+.card:hover .card__ext { opacity: 1; transform: none; color: var(--accent); }
+
+/* star -------------------------------------------------------------------- */
+.star {
+  position: relative; z-index: 2;
+  display: grid; place-items: center;
+  width: 28px; height: 28px;
+  border: 0; border-radius: 50%;
+  background: transparent; color: var(--ink-3);
+  cursor: pointer; opacity: 0;
+  transition: opacity var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+.star svg { width: 15px; height: 15px; }
+.card:hover .star, .star:focus-visible { opacity: 1; }
+.star:hover { color: var(--accent); }
+.star[aria-pressed="true"] { opacity: 1; color: var(--accent); }
+.star[aria-pressed="true"] svg path { fill: currentColor; }
+@media (hover: none) { .star { opacity: .45; } }
+
+/* ------------------------------------------------------------- tooltip --- */
+/* The caption exists only on hover, floating above the card. It never takes
+   up layout, so the grid stays perfectly still. */
+.tip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  z-index: 30;
+  width: max-content;
+  max-width: min(272px, 78vw);
+  padding: 10px 14px;
+  font-size: 12.8px; line-height: 1.48;
+  color: var(--ink);
+  letter-spacing: -.006em;
+  text-align: center;
+  background: rgba(26, 25, 23, .975);
+  border: .5px solid rgba(244, 241, 234, .14);
+  border-radius: 10px;
+  box-shadow: 0 16px 40px -14px rgba(0, 0, 0, .9);
+  -webkit-backdrop-filter: saturate(170%) blur(20px);
+  backdrop-filter: saturate(170%) blur(20px);
+  opacity: 0; visibility: hidden;
+  transform: translate(-50%, 4px) scale(.97);
+  transform-origin: 50% 100%;
+  transition: opacity var(--fast) var(--ease),
+              transform var(--fast) var(--ease),
+              visibility 0s linear var(--fast);
+  pointer-events: none;
+}
+.tip::after {                     /* the little arrow */
+  content: '';
+  position: absolute; top: 100%; left: 50%;
+  width: 9px; height: 9px;
+  margin: -5px 0 0 -4.5px;
+  background: inherit;
+  border-right: .5px solid rgba(244, 241, 234, .14);
+  border-bottom: .5px solid rgba(244, 241, 234, .14);
+  border-bottom-right-radius: 2px;
+  transform: rotate(45deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .tip, .card:focus-within .tip {
+    opacity: 1; visibility: visible;
+    transform: translate(-50%, 0) scale(1);
+    transition-delay: .1s, .1s, 0s;
+  }
+}
+
+/* First row has nothing above it, so its tooltip flips underneath.
+   Scoped to hover devices: on touch the caption is a plain static line, and
+   these positioned/transform rules would otherwise drag it out of place. */
+@media (hover: hover) and (pointer: fine) {
+  .card--flip .tip {
+    bottom: auto; top: calc(100% + 10px);
+    transform-origin: 50% 0;
+    transform: translate(-50%, -4px) scale(.97);
+  }
+  .card--flip .tip::after {
+    top: auto; bottom: 100%;
+    margin: 0 0 -5px -4.5px;
+    border: 0;
+    border-left: .5px solid rgba(244, 241, 234, .14);
+    border-top: .5px solid rgba(244, 241, 234, .14);
+    border-top-left-radius: 2px;
+  }
+  .card--flip:hover .tip, .card--flip:focus-within .tip {
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+/* Touch has no hover, so the caption drops into the flow as a quiet second
+   line — title, description, then tags. */
+@media (hover: none), (pointer: coarse) {
+  .tip {
+    position: static;
+    order: 2;
+    opacity: 1; visibility: visible; transform: none;
+    width: auto; max-width: none;
+    padding: 0; margin-top: 4px;
+    background: none; border: 0; box-shadow: none;
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+    text-align: left;
+    font-size: 13.5px; line-height: 1.5; color: var(--ink-2);
+  }
+  .tip::after { display: none; }
+  .card__meta { order: 3; margin-top: 8px; }
+  .card { align-items: flex-start; padding: 15px 16px; }
+  .card__aside { margin-top: 1px; }
+}
+
+/* --------------------------------------------------------------- empty --- */
+.empty { padding: 56px 0; color: var(--ink-2); font-size: 15px; }
+.linklike { border: 0; background: none; padding: 0; color: var(--accent); cursor: pointer; }
+
+/* =================================================================== FOOT == */
+.foot {
+  margin-top: auto;                 /* keeps the footer pinned on short pages */
+  padding: clamp(40px, 7vw, 68px) 0 max(30px, env(safe-area-inset-bottom));
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px 22px;
+  font-size: 13px; color: var(--ink-3);
+  border-top: 1px solid var(--line);
+}
+.foot__credit { letter-spacing: -.004em; }
+.foot__name { color: var(--ink-2); font-weight: 500; }
+.foot__links { display: flex; align-items: center; gap: 20px; }
+.foot a { transition: color var(--fast) var(--ease); }
+.foot a:hover { color: var(--ink); }
+
+/* -------------------------------------------------------- a11y / motion -- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+  .wordmark span { background-position: 0 0; opacity: 1; }
+  .card:hover { transform: none; }
+}
+
+@media print {
+  .bg, .toolbar, .search, .star { display: none !important; }
+  body { background: #fff; color: #000; }
+  .card { break-inside: avoid; border: 1px solid #ccc; }
+  .tip { position: static; opacity: 1; visibility: visible; transform: none;
+         background: none; border: 0; box-shadow: none; color: #444; }
+}
