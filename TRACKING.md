@@ -9,7 +9,7 @@ Update this in the same commit as the change it describes.
 
 | | |
 |---|---|
-| Phase | `v0.6` — wordmark fix, corner marks |
+| Phase | `v0.8` — v0.7 reverted; back to the v0.6 system |
 | Live at | not deployed yet |
 | Repo | https://github.com/skymemoryGit/Zibaldone_Homepage |
 | Last update | 2026-08-16 |
@@ -17,6 +17,88 @@ Update this in the same commit as the change it describes.
 ---
 
 ## Changelog
+
+### v0.8 — 2026-08-16 — revert v0.7, footer credit onto one line
+The v0.7 "luxury-editorial" pass (below) was rejected outright — owner's
+words: "fa schifo… era molto meglio prima" (looks bad, it was much better
+before). Reverted in full:
+- `--bg` back to `#080808`, `--accent` back to champagne `#B9A77D`, `--ink-2`/
+  `--ink-3` back to their warm v0.6 values, container back to `1180px`, card
+  radius back to `14px`.
+- Search field back to the boxed style (background + border + radius),
+  focus brightens the box rather than warming an underline.
+- Filters back to pill chips with a filled `aria-selected` state — the
+  underline-text-link treatment is gone.
+- Cards back to a visible `--surface` fill, compact `16px 17px` padding,
+  200ms hover transition, `translateY(-2px)` lift. No index numbers, no
+  uppercase/wide-tracking meta — both were v0.7-only additions.
+- Rose corner mark back to its original **red** multi-tone palette (was
+  recoloured monochrome bronze in v0.7).
+- Load-in motion (`revealBlur`/`fadeUp`, 80ms card stagger) removed; cards
+  use the original flat 26ms-per-card stagger, capped 300ms.
+
+**One thing kept, by explicit request** ("al max tieni font del titolo" —
+at most, keep the title font): the wordmark stays in **Playfair Display**
+italic rather than reverting to Instrument Serif. Its size, weight, tracking
+and margins are back to the v0.6 numbers though — only the typeface name
+changed, not how it's set.
+
+**Footer**: the "Inspired by LKS" credit (re-added earlier today, see v0.7
+entry) is kept, but combined onto **one line** with "Powered by Jc.Ye" —
+"Powered by Jc.Ye · Inspired by LKS" — instead of two stacked lines. Owner's
+explicit ask: as short as possible, link only on "LKS".
+
+### v0.7 — 2026-08-16 — luxury-editorial styling pass
+A full visual rewrite, styling and UI/UX only — content, data, DOM structure
+and every existing behaviour (search, filters, links, saved items) are
+unchanged. See CLAUDE.md § 6 for the new token set and rules; summary here:
+
+- **Background**: flat `#080808` → warm deep `#0e0d0b`, plus an
+  extremely faint bronze radial glow behind the wordmark (`rgba(201,169,110,
+  .045)`, was a paler warm-white glow).
+- **Wordmark**: swapped Instrument Serif → **Playfair Display, italic 600**,
+  sized up (clamp 56–112px, was 50–98px), more space below. Letter-spacing
+  reset to `0` — Playfair italic doesn't read narrow the way Instrument
+  Serif did, so the positive tracking added in v0.6 no longer applies.
+- **Subtitle**: 13.5px dim `--ink-3` → 16–18px `--ink-2` (`#a1a1aa`), line-
+  height 1.6. Reads as a real subtitle now, not a caption.
+- **Whitespace**: container `1180px` → `1120px`; header, toolbar-to-grid and
+  card gaps all opened up. The page breathes more between sections.
+- **Search**: boxed SaaS-style input → minimal underline field. Transparent
+  background, `border-bottom` only, no radius. Focus warms the line to
+  `--accent` instead of brightening the whole box.
+- **Filters**: pill buttons with a filled active state → plain text links.
+  Selected state is a 1px gold underline that grows in from the left
+  (`transform: scaleX()`), not a background swap.
+- **Cards**: near-invisible background (`rgba(255,255,255,.012)`), hairline
+  border down to `rgba(255,255,255,.06)`, radius `14px → 10px`, more padding
+  (16–17px → 24px), no shadow ever. Added a small italic gold index number
+  ("01", "02", …) per card — decorative, reflects position in the current
+  sorted/filtered list, not a stable ID. Meta line (tags + "Soon") now
+  uppercase with `.16em` tracking at 10.5px, matching an editorial caption
+  rather than a UI label.
+- **Card hover**: 200ms linear-ish ease → 400ms `--ease-out`, lift capped at
+  4px (was 2px), border warms toward `--accent` at low opacity instead of
+  just brightening to `--line-2`-neutral, and the title now nudges 3px
+  right. No glow, no bounce.
+- **Footer**: divider recoloured to a faint gold (`--divider`,
+  `rgba(201,169,110,.14)`) instead of the neutral hairline; "Powered by
+  Jc.Ye" is now uppercase with wide tracking; GitHub/LinkedIn hover to
+  `--accent` with a thin underline instead of just brightening to `--ink`.
+  **LKS credit re-added** as a short second line, "Inspired by LKS" →
+  <https://lkssite.vip/> (the live site, not the GitHub repo this time) —
+  see Decisions; this flip-flopped twice today, don't flip it a third time
+  without asking.
+- **Corner marks**: rose recoloured from a red multi-tone bloom to
+  **monochrome bronze**, opacity dropped `.2 → .09` ("quasi invisibile" was
+  the brief — it was reading as too saturated/random against the rest of the
+  system). Pen mark unchanged in colour, opacity trimmed slightly (`.16 →
+  .13`) to match the new overall restraint.
+- **Motion on load**: new entrance sequence — wordmark and tagline fade +
+  blur in (`revealBlur`), search and filters fade up (`fadeUp`), cards fade
+  up with an 80ms stagger (was a flat 26ms-per-card, capped 300ms; now
+  capped 480ms). Fully neutralised under `prefers-reduced-motion`, with an
+  explicit reset block rather than relying on near-zero duration alone.
 
 ### v0.6 — 2026-08-16 — wordmark fix, corner marks
 - **Wordmark tracking flipped from negative to positive** (`-.01em` →
@@ -147,6 +229,12 @@ First build: search, two collections, favourites, responsive grid.
 | 2026-08-16 | Tooltip descriptions capped at ~8–10 words, down from ~110 characters | The old length overflowed a glance-tooltip into something you had to actually read. |
 | 2026-08-16 | Wordmark uses positive letter-spacing (`.015em`), not negative | Instrument Serif italic read squashed with the negative tracking carried over from the Inter body copy. Positive tracking is correct for this typeface at display size. |
 | 2026-08-16 | Two fixed, hand-built corner marks — a rose (red, bottom-right) and a pen nib (neutral, bottom-left) | Owner's explicit call, referencing a "single rose on black" mood and the site's own "notebook" identity. Kept fixed, low-opacity, outside the card grid, off on mobile — so it stays a hint, not a second design system. Not a reopening of the v0.3 "generated cover art" rejection (see CLAUDE.md § 6). |
+| 2026-08-16 | Full "luxury-editorial" restyle: gold/bronze `#c9a96e` accent replaces champagne `#B9A77D`, Playfair Display replaces Instrument Serif, cards/search/filters de-boxed | Explicit, detailed owner brief (15-point spec). Styling and UI/UX only — content, structure and functionality were explicitly required to stay unchanged, and did. |
+| 2026-08-16 | Rose corner mark recoloured red → monochrome bronze, opacity `.2 → .09` | Same brief: the red mark read as "too saturated/random" against the rest of the (now gold-only) system. Kept, not removed, since the owner said "if kept, make it monochrome" rather than "remove it". |
+| 2026-08-16 | LKs credit re-added to the footer, as a short "Inspired by LKS" line → lkssite.vip | Owner's call, same day as the removal above — reverses it a second time. Points at the live site now, not the GitHub repo. If this needs to change again, ask first; it's flipped twice in one day already. |
+| 2026-08-16 | The "luxury-editorial" restyle (previous row) is reverted in full — champagne, pill chips, boxed search, compact cards are back | Owner's verdict: "fa schifo… era molto meglio prima" (looks bad, much better before). Rejected outright, not iterated on. If a similar direction comes up again, ask before rebuilding it. |
+| 2026-08-16 | Wordmark keeps Playfair Display (not reverted to Instrument Serif), but at the original v0.6 size/weight/tracking | The one piece of the reverted pass the owner asked to keep — "al max tieni font del titolo" (at most, keep the title font). |
+| 2026-08-16 | Footer credit combined onto one line: "Powered by Jc.Ye · Inspired by LKS" | Owner's explicit ask, same message as the revert — as short as possible, link only on "LKS". |
 
 ---
 

@@ -27,7 +27,7 @@
 
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text',
           'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
 
   --r:     14px;
   --pad:   clamp(20px, 5vw, 44px);
@@ -125,7 +125,7 @@ h1, h2, p { margin: 0; }
   font-style: italic;
   font-size: clamp(50px, 12.5vw, 98px);
   font-weight: 400;
-  letter-spacing: .015em;    /* Instrument Serif italic reads narrow — open it up rather than crowd it */
+  letter-spacing: .015em;    /* Playfair italic still reads a touch narrow at display size — open it up rather than crowd it */
   line-height: 1.05;
   margin-bottom: clamp(6px, 1.4vw, 10px);
   user-select: none;
@@ -440,6 +440,8 @@ h1, h2, p { margin: 0; }
 }
 .foot__credit { letter-spacing: -.004em; }
 .foot__name { color: var(--ink-2); font-weight: 500; }
+.foot__inspired { color: var(--ink-3); }
+.foot__inspired a { color: var(--ink-2); }
 .foot__links { display: flex; align-items: center; gap: 20px; }
 .foot a { transition: color var(--fast) var(--ease); }
 .foot a:hover { color: var(--ink); }

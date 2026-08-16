@@ -15,8 +15,12 @@ directory**: a quiet grid of compact cards pointing to two kinds of things.
 | **Made by JYe** | `mine`  | Pages/apps I built myself, including client work |
 | **Picks by JYe** | `picks` | Other people's sites worth keeping open |
 
-The reference was [LKs 网站推荐合集](https://github.com/xiangjianan/lks) — no
-longer credited in the footer (owner's call, 2026-08-16; see Decisions).
+The reference was [LKs 网站推荐合集](https://github.com/xiangjianan/lks). The
+footer credit flipped twice on 2026-08-16 (removed, then re-added pointing at
+the live site instead of the GitHub repo) before settling on its current
+form: "Powered by Jc.Ye · Inspired by LKS", both on one line, LKS linking to
+<https://lkssite.vip/>. See Decisions if you need the history; don't restyle
+this back onto two lines without asking — that was explicitly undone.
 
 ### The design brief — read this before proposing anything
 
@@ -146,22 +150,41 @@ Tokens are the contract. Change `:root`, not individual rules.
 --accent #B9A77D  (champagne — the only colour on the page)
 ```
 
+**A "luxury-editorial" restyle was tried and reverted, same day (2026-08-16,
+v0.7 → v0.8).** Deep-black bg, gold/bronze `#c9a96e` accent, pill-less text
+filters, near-invisible cards, 16–18px subtitle, load-in blur/fade motion —
+all of it. The owner's verdict, in full: "fa schifo… era molto meglio
+prima" (looks bad, it was much better before). It's reverted in full. If
+this direction gets proposed again — by a future assistant or by re-reading
+an old plan — don't just redo it; the owner has now rejected it once
+explicitly. Ask first. The one thing kept from that pass: the wordmark font
+(Playfair Display, see below) — everything else in this section is the
+restored v0.4–v0.6 system.
+
 Three things carry the "quiet luxury" register, and they are all material:
 
 1. **`--ink` is warm paper-white, never `#FFF`** — and every grey is warm to
    match. This is most of the effect; a cold blue-white undoes it instantly.
-2. **Champagne is the only *functional* colour**, and it is rare: the search
-   icon on focus, the external arrow on hover, the saved star, the focus ring.
-   If you find a fifth *interactive* use, that's the signal to stop. (Red now
-   exists too, but only in the rose corner mark — see below. It is decorative,
-   never used for UI state, and doesn't compete with champagne's job.)
+2. **Champagne is the only colour**, and it is rare: the search icon on
+   focus, the external arrow on hover, the saved star, the focus ring. If
+   you find a fifth use, that's the signal to stop.
 3. **Every card carries a resting hairline** (`--line`), so the grid reads as
    something *set* rather than shapes floating on black. Hover moves the
    hairline to `--line-2` — the border does the work, not a glow.
 
-Type: Inter for everything except the wordmark, which sets in **Instrument
-Serif, italic** (`--font-display`) — the one deliberate display-type accent on
-the page, owner's explicit call (2026-08-16). Body keeps negative tracking
+Filters are pill chips (`.chip`, filled background + border when
+`aria-selected="true"`) — **not** the underline-text-link treatment from the
+reverted pass. Cards keep a visible `--surface` fill, `14px` radius, compact
+`16px 17px` padding, and a `translateY(-2px)` hover with a 200ms transition —
+not the near-invisible/generous-padding/400ms-ease-out treatment. If you're
+tempted to reintroduce either, re-read the paragraph above first.
+
+Type: Inter for everything except the wordmark, which sets in **Playfair
+Display, italic** (`--font-display`) — the one deliberate display-type accent
+on the page. (This one detail survived the 2026-08-16 revert; the font
+itself swapped twice that day — Instrument Serif → Playfair Display — but
+the sizing/tracking/weight are the original v0.6 values, not the bigger/
+bolder treatment from the reverted pass.) Body keeps negative tracking
 (`-.012em`) to stay tight; the wordmark instead uses **positive** tracking
 (`.015em`) — italic serif at this size reads *narrow* and slightly crowded
 with negative tracking, opening it up is what makes it read as intentional
@@ -172,17 +195,18 @@ through champagne, then settles to flat ink. `background-size: 300%` means the
 visible window is a third of the gradient, so at both ends it is solid ink and
 only the pass shows. If you change the stops, re-check both ends.
 
-**Corner marks** (`.corner-mark--rose`, `.corner-mark--pen`, 2026-08-16):
-two hand-built SVGs, fixed to the viewport corners like `.bg`, at low opacity
-(.16–.2), `pointer-events: none`, hidden below 760px. They are decoration, not
-content — this is *not* the "generated cover art" the 2026-08-15 design brief
-rejects (that was per-card auto-generated art inside the grid, breaking the
-card layout; these are two fixed, hand-authored marks sitting in the black
-margin outside any card, at owner's explicit request). Keep them that way: if
-a mark ever needs to sit inside a card or scale with content, that's scope
-creep back toward v0.3 — stop and ask. Regenerate via the Python snippets in
-git history if you need to retune the rose's petal geometry; hand-editing the
-path data directly is painful.
+**Corner marks** (`.corner-mark--rose`, `.corner-mark--pen`, added
+2026-08-16): two hand-built SVGs, fixed to the viewport corners like `.bg`,
+at low opacity (.16–.2), `pointer-events: none`, hidden below 760px. They are
+decoration, not content — this is *not* the "generated cover art" the
+2026-08-15 design brief rejects (that was per-card auto-generated art inside
+the grid, breaking the card layout; these are two fixed, hand-authored marks
+sitting in the black margin outside any card, at owner's explicit request).
+The rose is back to its original **red multi-tone** palette — it was
+recoloured monochrome bronze during the reverted pass, then reverted along
+with everything else. Regenerate via the Python snippets in git history if
+you need to retune the rose's petal geometry; hand-editing the path data
+directly is painful.
 
 Easy to break by accident:
 - Body copy never below 12.5px.
