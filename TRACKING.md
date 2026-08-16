@@ -9,7 +9,7 @@ Update this in the same commit as the change it describes.
 
 | | |
 |---|---|
-| Phase | `v0.5` — real links, sort order, footer & type pass |
+| Phase | `v0.6` — wordmark fix, corner marks |
 | Live at | not deployed yet |
 | Repo | https://github.com/skymemoryGit/Zibaldone_Homepage |
 | Last update | 2026-08-16 |
@@ -17,6 +17,28 @@ Update this in the same commit as the change it describes.
 ---
 
 ## Changelog
+
+### v0.6 — 2026-08-16 — wordmark fix, corner marks
+- **Wordmark tracking flipped from negative to positive** (`-.01em` →
+  `.015em`), size bumped slightly. Instrument Serif italic at the old
+  negative tracking read cramped/"schiacciato" (squashed) — owner flagged it
+  same day it shipped. Positive tracking is correct for this font at display
+  size; don't carry over the body-copy instinct of tightening italics.
+- **Tagline simplified to one sentence, one line** on desktop/tablet: dropped
+  the literal "(.ch = Switzerland)" gloss as redundant (the joke already
+  lands from context) and kept only the flag as trailing punctuation —
+  "...deserves a Swiss address. 🇨🇭". `max-width` opened from 46ch to 68ch so
+  the full sentence fits on one line above ~560px; it still wraps naturally,
+  not forcibly, on narrow phones.
+- **Two corner marks added**: a hand-built rose (`assets/img/rose-mark.svg`,
+  layered petal rings in shades of red, inspired by the "single rose on
+  black" mood the owner referenced) bottom-right, and a fountain-pen-nib
+  line mark (`assets/img/pen-mark.svg`, neutral ink tones, ties to the
+  "zibaldone = notebook" idea) bottom-left. Both: `position: fixed` like
+  `.bg`, low opacity (.16–.2), `pointer-events: none`, hidden under 760px.
+  Original artwork, not reproductions of the reference photos — see
+  CLAUDE.md § 6 for why this doesn't reopen the "no generated cover art"
+  decision from v0.3.
 
 ### v0.5 — 2026-08-16 — real links, sort order, footer & type pass
 - **Real URLs.** Pranzo McLaren Roulette, VPChess and Ravioli Milano now point
@@ -101,6 +123,9 @@ First build: search, two collections, favourites, responsive grid.
 - `id` values are the saved-items key. Renaming one silently drops a save.
 - `data.js` will grow. Fine into the hundreds.
 - The champagne accent works *because* it is rare. Every new use dilutes it.
+- The corner marks are fixed + low-opacity on purpose. Don't let them creep
+  up in opacity or size "for visibility" — the reference mood is a hint in
+  the dark, not an illustration.
 
 ---
 
@@ -120,6 +145,8 @@ First build: search, two collections, favourites, responsive grid.
 | 2026-08-16 | Default chip is "Made by JYe", not "All" | Owner wants their own work to be the first thing a visitor sees. |
 | 2026-08-16 | Wordmark sets in Instrument Serif italic; a one-line tagline sits under it | Owner's explicit call. Narrow, deliberate exception to "Inter only" and "no tagline" — one line, no further copy. |
 | 2026-08-16 | Tooltip descriptions capped at ~8–10 words, down from ~110 characters | The old length overflowed a glance-tooltip into something you had to actually read. |
+| 2026-08-16 | Wordmark uses positive letter-spacing (`.015em`), not negative | Instrument Serif italic read squashed with the negative tracking carried over from the Inter body copy. Positive tracking is correct for this typeface at display size. |
+| 2026-08-16 | Two fixed, hand-built corner marks — a rose (red, bottom-right) and a pen nib (neutral, bottom-left) | Owner's explicit call, referencing a "single rose on black" mood and the site's own "notebook" identity. Kept fixed, low-opacity, outside the card grid, off on mobile — so it stays a hint, not a second design system. Not a reopening of the v0.3 "generated cover art" rejection (see CLAUDE.md § 6). |
 
 ---
 

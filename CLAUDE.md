@@ -61,6 +61,8 @@ assets/css/style.css     all styling; design tokens in :root at the top
 assets/js/data.js        THE CONTENT. Editing the site = editing this file.
 assets/js/app.js         render + search + filter + saved items (~190 lines)
 assets/img/favicon.svg   notebook mark
+assets/img/rose-mark.svg hand-built corner watermark — see § 6
+assets/img/pen-mark.svg  hand-built corner watermark — see § 6
 CLAUDE.md                this file
 TRACKING.md              roadmap + changelog + decisions
 ```
@@ -148,23 +150,39 @@ Three things carry the "quiet luxury" register, and they are all material:
 
 1. **`--ink` is warm paper-white, never `#FFF`** — and every grey is warm to
    match. This is most of the effect; a cold blue-white undoes it instantly.
-2. **Champagne is the only colour**, and it is rare: the search icon on focus,
-   the external arrow on hover, the saved star, the focus ring. If you find a
-   fifth use, that's the signal to stop.
+2. **Champagne is the only *functional* colour**, and it is rare: the search
+   icon on focus, the external arrow on hover, the saved star, the focus ring.
+   If you find a fifth *interactive* use, that's the signal to stop. (Red now
+   exists too, but only in the rose corner mark — see below. It is decorative,
+   never used for UI state, and doesn't compete with champagne's job.)
 3. **Every card carries a resting hairline** (`--line`), so the grid reads as
    something *set* rather than shapes floating on black. Hover moves the
    hairline to `--line-2` — the border does the work, not a glow.
 
 Type: Inter for everything except the wordmark, which sets in **Instrument
 Serif, italic** (`--font-display`) — the one deliberate display-type accent on
-the page, owner's explicit call (2026-08-16). Negative tracking (`-.012em`
-body) is what keeps the Inter side from reading as generic sans; the wordmark
-needs much less (`-.01em`), since serif italics are already narrow.
+the page, owner's explicit call (2026-08-16). Body keeps negative tracking
+(`-.012em`) to stay tight; the wordmark instead uses **positive** tracking
+(`.015em`) — italic serif at this size reads *narrow* and slightly crowded
+with negative tracking, opening it up is what makes it read as intentional
+rather than squeezed. Don't reuse the body's negative-tracking instinct here.
 
 The wordmark is the one flourish: a sheen sweeps across once on load, passing
 through champagne, then settles to flat ink. `background-size: 300%` means the
 visible window is a third of the gradient, so at both ends it is solid ink and
 only the pass shows. If you change the stops, re-check both ends.
+
+**Corner marks** (`.corner-mark--rose`, `.corner-mark--pen`, 2026-08-16):
+two hand-built SVGs, fixed to the viewport corners like `.bg`, at low opacity
+(.16–.2), `pointer-events: none`, hidden below 760px. They are decoration, not
+content — this is *not* the "generated cover art" the 2026-08-15 design brief
+rejects (that was per-card auto-generated art inside the grid, breaking the
+card layout; these are two fixed, hand-authored marks sitting in the black
+margin outside any card, at owner's explicit request). Keep them that way: if
+a mark ever needs to sit inside a card or scale with content, that's scope
+creep back toward v0.3 — stop and ask. Regenerate via the Python snippets in
+git history if you need to retune the rose's petal geometry; hand-editing the
+path data directly is painful.
 
 Easy to break by accident:
 - Body copy never below 12.5px.
@@ -172,6 +190,8 @@ Easy to break by accident:
 - The whole card is the link (`.card__link` overlay); the star sits above it.
 - `prefers-reduced-motion` block at the bottom of the CSS — extend it if you
   add animation.
+- Corner marks must stay out of the print stylesheet and off narrow
+  viewports — check both if you touch `.corner-mark`.
 
 ---
 

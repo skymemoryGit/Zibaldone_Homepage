@@ -78,6 +78,33 @@ h1, h2, p { margin: 0; }
     radial-gradient(56vmax 40vmax at 10% -10%, rgba(185, 167, 125, .085), transparent 70%);
 }
 
+/* corner marks — a rose (bottom right) and a pen nib (bottom left), fixed to
+   the viewport like .bg. Both sit in the black margin, never over content;
+   low opacity so they read as ambient texture, not illustration. Off on
+   small screens — there isn't room for them without crowding the grid. */
+.corner-mark {
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+}
+.corner-mark--rose {
+  right: clamp(-70px, -5vw, -24px);
+  bottom: clamp(-80px, -6vw, -30px);
+  width: clamp(240px, 27vw, 460px);
+  opacity: .2;
+}
+.corner-mark--pen {
+  left: clamp(-36px, -3vw, -8px);
+  bottom: clamp(54px, 9vh, 104px);
+  width: clamp(130px, 13vw, 200px);
+  opacity: .16;
+  transform: rotate(-9deg);
+}
+@media (max-width: 760px) {
+  .corner-mark { display: none; }
+}
+
 .shell {
   max-width: var(--maxw);
   margin-inline: auto;
@@ -96,24 +123,24 @@ h1, h2, p { margin: 0; }
 .wordmark {
   font-family: var(--font-display);
   font-style: italic;
-  font-size: clamp(44px, 11vw, 86px);
+  font-size: clamp(50px, 12.5vw, 98px);
   font-weight: 400;
-  letter-spacing: -.01em;
-  line-height: 1;
+  letter-spacing: .015em;    /* Instrument Serif italic reads narrow — open it up rather than crowd it */
+  line-height: 1.05;
   margin-bottom: clamp(6px, 1.4vw, 10px);
   user-select: none;
 }
 
 /* tagline ------------------------------------------------------------------ */
 .tagline {
-  max-width: 46ch;
+  max-width: 68ch;           /* wide enough to hold the sentence on one line above ~560px */
   margin-bottom: clamp(26px, 5vw, 44px);
   font-size: 13.5px;
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--ink-3);
   letter-spacing: -.006em;
 }
-.tagline__ch { color: var(--ink-2); }
+.tagline__ch { margin-left: 1px; }
 .wordmark span {
   display: inline-block;
   background: linear-gradient(100deg,
@@ -429,7 +456,7 @@ h1, h2, p { margin: 0; }
 }
 
 @media print {
-  .bg, .toolbar, .search, .star { display: none !important; }
+  .bg, .corner-mark, .toolbar, .search, .star { display: none !important; }
   body { background: #fff; color: #000; }
   .card { break-inside: avoid; border: 1px solid #ccc; }
   .tip { position: static; opacity: 1; visibility: visible; transform: none;
