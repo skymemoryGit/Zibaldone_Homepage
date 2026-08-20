@@ -9,8 +9,13 @@ Static, dependency-free homepage. No framework, no build step: clone it and open
 index.html               markup
 assets/css/style.css     styling (design tokens at the top of the file)
 assets/js/data.js        every card on the site lives here
-assets/js/app.js         search, filters, saved items
+assets/js/app.js         search, filters, saved items, themes, layouts
+assets/img/              the emblem (two tints) + favicons + corner mark
+tools/extract-logo.py    regenerates those PNGs from the original logo
 ```
+
+Two themes (ink / paper) and two layouts (grid / index), both toggled from the
+toolbar and remembered between visits.
 
 ## Adding a site
 

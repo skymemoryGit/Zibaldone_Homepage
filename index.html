@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#080808">
+<meta name="theme-color" content="#29221D" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F5EDE1" media="(prefers-color-scheme: light)">
 
 <title>Zibaldone</title>
 <meta name="description" content="Zibaldone.ch — pages built by Jiancheng Ye, and a few worth keeping open.">
@@ -18,27 +18,52 @@
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="canonical" href="https://zibaldone.ch/">
-<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/favicon-180.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital@1&display=swap">
+<!-- Playfair Display is now loaded ROMAN, not italic: the logo sets ZIBALDONE
+     upright, in caps, on a wide track, and the wordmark below reproduces that
+     lockup in live text rather than as a second image. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500&display=swap">
 
 <link rel="stylesheet" href="assets/css/style.css">
+
+<!-- The one inline script on the page, and it earns its place: it stamps the
+     saved theme onto <html> before first paint. Loading it with the rest of
+     app.js would flash a full-screen white page at every dark-mode visitor. -->
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('zibaldone.theme.v1');
+    var dark = saved ? saved === 'dark'
+                     : !matchMedia('(prefers-color-scheme: light)').matches;
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  } catch (e) { /* private mode — the dark default in the markup stands */ }
+})();
+</script>
 </head>
 
 <body>
-<a class="skip-link" href="#grid">Skip to the list</a>
+<a class="skip-link" href="#list">Skip to the list</a>
 
 <div class="bg" aria-hidden="true"></div>
+<!-- The pen-nib corner mark is gone: the logo is a quill, so the two were
+     saying the same thing twice. The rose stays — it is a separate motif. -->
 <img class="corner-mark corner-mark--rose" src="assets/img/rose-mark.svg" alt="" aria-hidden="true">
-<img class="corner-mark corner-mark--pen"  src="assets/img/pen-mark.svg"  alt="" aria-hidden="true">
 
 <div class="shell">
 
   <header class="head">
+    <!-- Two tints of one emblem, swapped by theme, so the mark is never a pale
+         cream shape sitting on a bright sheet. Decorative: the <h1> below is
+         the real name, so this is hidden from assistive tech. -->
+    <img class="logo logo--ink"   src="assets/img/logo-mark.png"       alt="" aria-hidden="true" width="235" height="264">
+    <img class="logo logo--paper" src="assets/img/logo-mark-paper.png" alt="" aria-hidden="true" width="235" height="264">
+
     <h1 class="wordmark"><span>Zibaldone</span></h1>
-    <p class="tagline">Not a blog, it's a zibaldone&hellip; because even chaos deserves a Swiss address. <span class="tagline__ch">🇨🇭</span></p>
+    <p class="tagline">Not a blog, it&rsquo;s a zibaldone&hellip; because even chaos deserves a Swiss address. <span class="tagline__ch">&#127464;&#127469;</span></p>
 
     <form class="search" role="search" onsubmit="return false">
       <svg class="search__icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -47,6 +72,7 @@
       </svg>
       <input id="q" class="search__input" type="search" autocomplete="off"
              placeholder="Search" aria-label="Search sites" spellcheck="false">
+      <kbd class="search__hint" aria-hidden="true">/</kbd>
       <button id="qClear" class="search__clear" type="button" aria-label="Clear search" hidden>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M7 7l10 10M17 7L7 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -56,20 +82,52 @@
 
     <div class="toolbar">
       <div class="chips" id="chips" role="tablist" aria-label="Collections"></div>
-      <button id="favBtn" class="icon-btn" type="button" aria-pressed="false"
-              aria-label="Show only saved" title="Saved">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 4.4l2.4 4.87 5.37.78-3.89 3.79.92 5.36L12 16.66l-4.8 2.54.92-5.36-3.89-3.79 5.37-.78z"
-                fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
-        </svg>
-      </button>
+
+      <div class="tools">
+        <div class="seg" role="group" aria-label="Layout">
+          <button class="seg__btn" type="button" data-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="4" y="4" width="7" height="7" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="13" y="4" width="7" height="7" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="4" y="13" width="7" height="7" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="13" y="13" width="7" height="7" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </button>
+          <button class="seg__btn" type="button" data-view="index" aria-pressed="false" aria-label="Index view" title="Index">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 6.5h3M4 12h3M4 17.5h3M10 6.5h10M10 12h10M10 17.5h10"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <button id="favBtn" class="icon-btn" type="button" aria-pressed="false"
+                aria-label="Show only saved" title="Saved">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 4.4l2.4 4.87 5.37.78-3.89 3.79.92 5.36L12 16.66l-4.8 2.54.92-5.36-3.89-3.79 5.37-.78z"
+                  fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <button id="themeBtn" class="icon-btn" type="button" aria-label="Switch to paper theme" title="Theme">
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 14.2A8.2 8.2 0 019.8 4a8.2 8.2 0 1010.2 10.2z"
+                  fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M12 3.2v2.1M12 18.7v2.1M3.2 12h2.1M18.7 12h2.1M5.8 5.8l1.5 1.5M16.7 16.7l1.5 1.5M18.2 5.8l-1.5 1.5M7.3 16.7l-1.5 1.5"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </header>
 
   <main>
     <p class="count" id="count" role="status" aria-live="polite"></p>
 
-    <section id="grid" class="grid" aria-label="Sites"></section>
+    <section id="list" class="list list--grid" aria-label="Sites"></section>
 
     <div id="empty" class="empty" hidden>
       <p>No matches. <button type="button" class="linklike" id="resetBtn">Reset</button></p>
@@ -77,7 +135,7 @@
   </main>
 
   <footer class="foot">
-    <p class="foot__credit">Powered by <span class="foot__name">Jc.Ye</span> <span class="foot__inspired">· Inspired by <a href="https://lkssite.vip/" target="_blank" rel="noopener noreferrer">LKS</a></span></p>
+    <p class="foot__credit">Powered by <span class="foot__name">Jc.Ye</span> <span class="foot__inspired">&middot; Inspired by <a href="https://lkssite.vip/" target="_blank" rel="noopener noreferrer">LKS</a></span></p>
     <nav class="foot__links" aria-label="Elsewhere">
       <a href="https://github.com/skymemoryGit" target="_blank" rel="noopener noreferrer">GitHub</a>
       <a href="https://www.linkedin.com/in/jiancheng-ye-790966201" target="_blank" rel="noopener noreferrer">LinkedIn</a>

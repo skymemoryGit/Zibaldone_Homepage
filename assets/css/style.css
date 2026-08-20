@@ -1,29 +1,65 @@
 /* =============================================================================
  *  zibaldone.ch — style.css
  *
- *  Same shape as before: a wordmark, a search field, three chips, a quiet grid
- *  of compact cards. The caption only exists on hover, as a floating tooltip.
+ *  Same page it has always been: a wordmark, a search field, chips, a compact
+ *  list of links. No hero, no featured object, no about, no CTA — that
+ *  homepage was built once and thrown out, and this is not a second attempt.
  *
- *  What changed is the material, not the layout — warm paper-white instead of
- *  a cold blue-white, a champagne accent instead of system blue, and a hairline
- *  on every card so the grid reads as something set rather than something
- *  floating on black.
+ *  Three things carry the current design, and all three are material or
+ *  interaction rather than new structure:
+ *
+ *    1. THE LOGO SETS THE PALETTE. Every colour is sampled from main2.png,
+ *       including the page background, and the notebook ruling behind
+ *       everything is the same grid the logo is printed on.
+ *
+ *    2. INK / PAPER. The site is a zibaldone — a commonplace notebook. Dark is
+ *       ink at night, light is warm paper. Every colour is a token that
+ *       resolves per theme; nothing is hardcoded outside the :root blocks.
+ *
+ *    3. GRID / INDEX. The same items render as a card grid or as a notebook
+ *       index. Crucially these are the *same DOM nodes* under a different
+ *       layout, which is what lets them physically travel between the two.
+ *
+ *  The accent is the only colour on the page, and the caption is hover-only in
+ *  both views — it never takes up layout.
  * =========================================================================== */
 
 /* ---------------------------------------------------------------- tokens -- */
+/* Ink is the default and the identity; paper is a full override further down,
+   never a filter or an inversion of this block.
+
+   Every colour below is sampled from the logo, not invented next to it:
+   #29221D is the exact field the emblem sits on, and #EFD3B5 is the exact
+   cream of the quill. The page and the mark are the same material, which is
+   why the logo needs no plate, no box and no drop shadow to sit on it. */
 :root {
-  --bg:        #080808;
-  --surface:   rgba(244, 241, 234, .035);
-  --surface-2: rgba(244, 241, 234, .062);
+  --bg:        #29221D;   /* the logo's own ground */
+  --bg-2:      #241E1A;
+  --surface:   rgba(243, 237, 230, .04);
+  --surface-2: rgba(243, 237, 230, .075);
 
-  --line:      rgba(244, 241, 234, .085);   /* resting hairline, always drawn */
-  --line-2:    rgba(244, 241, 234, .17);    /* hover / active */
+  --line:      rgba(243, 237, 230, .10);
+  --line-2:    rgba(243, 237, 230, .20);
 
-  --ink:       #F2EFE9;   /* warm paper-white — never pure #FFF */
-  --ink-2:     #9A968E;
-  --ink-3:     #6B6862;
+  --ink:       #F2EDE6;   /* 13.6:1 */
+  --ink-2:     #B6A895;   /*  6.7:1 */
+  --ink-3:     #9A8D7B;   /*  4.8:1 */
 
-  --accent:    #B9A77D;   /* champagne. The only colour on the page. */
+  /* Deepened a step from the logo's #EFD3B5. At the source value the accent
+     and --ink sit almost on top of each other in lightness, and an accent that
+     reads as "the white, but warm" stops being an accent at all. */
+  --accent:    #E8C49B;   /*  9.6:1 */
+  --glow:      rgba(232, 196, 155, .07);
+
+  --rule:      rgba(239, 211, 181, .04);   /* the notebook ruling */
+  --rule-step: 28px;
+
+  --tip-bg:    rgba(24, 19, 16, .975);
+  --tip-line:  rgba(243, 237, 230, .16);
+  --tip-ink:   #F2EDE6;
+
+  --mark-blend: normal;
+  --mark-rose:  .16;
 
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text',
           'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -33,9 +69,39 @@
   --pad:   clamp(20px, 5vw, 44px);
   --maxw:  1180px;
 
+  /* One easing, three durations. Everything on the page picks from here, so
+     the whole interface moves with a single rhythm. */
   --ease:  cubic-bezier(.32, .72, 0, 1);
   --fast:  .2s;
-  --slow:  .4s;
+  --mid:   .34s;
+  --slow:  .42s;
+}
+
+/* PAPER — the sheet the notebook is made of, warm, never #FFF: a cold white
+   would undo the same warmth the ink theme is built on. The accent has to drop
+   to #7F6036 here, because the logo's cream is about 1.2:1 on a light sheet and
+   would vanish as text, as a focus ring and as an icon. Same colour, same job,
+   different weight. */
+:root[data-theme="light"] {
+  --bg:        #F5EDE1;
+  --bg-2:      #EDE3D4;
+  --surface:   rgba(36, 30, 26, .032);
+  --surface-2: rgba(36, 30, 26, .06);
+
+  --line:      rgba(36, 30, 26, .11);
+  --line-2:    rgba(36, 30, 26, .24);
+
+  --ink:       #241E1A;   /* 14.2:1 */
+  --ink-2:     #5C5044;   /*  6.7:1 */
+  --ink-3:     #736759;   /*  4.8:1 */
+
+  --accent:    #7F6036;   /*  5.0:1 */
+  --glow:      rgba(127, 96, 54, .06);
+
+  --rule:      rgba(41, 34, 29, .05);
+
+  --mark-blend: multiply;
+  --mark-rose:  .14;
 }
 
 /* ------------------------------------------------------------------ base -- */
@@ -54,6 +120,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  transition: background var(--mid) var(--ease), color var(--mid) var(--ease);
 }
 
 a { color: inherit; text-decoration: none; }
@@ -61,9 +128,9 @@ button { font: inherit; color: inherit; }
 h1, h2, p { margin: 0; }
 [hidden] { display: none !important; }
 
-::selection { background: var(--accent); color: #0B0B0B; }
+::selection { background: var(--accent); color: var(--bg); }
 
-:focus-visible { outline: 1.5px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
 
 .skip-link {
   position: absolute; left: -9999px; top: 0; z-index: 99;
@@ -71,39 +138,41 @@ h1, h2, p { margin: 0; }
 }
 .skip-link:focus { left: 0; }
 
-/* one very faint pool of warm light, top-left. Nothing else. */
+/* The logo is drawn on ruled paper — a faint grid at a ~29px pitch, measured
+   off the source file. Reproducing it across the whole viewport is what makes
+   the emblem look like it belongs to the page rather than like a PNG pasted
+   onto it. It is texture, not illustration: two hairline gradients, no image,
+   and it sits under everything at z-index -1. */
 .bg {
   position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background:
-    radial-gradient(56vmax 40vmax at 10% -10%, rgba(185, 167, 125, .085), transparent 70%);
+    radial-gradient(56vmax 40vmax at 10% -10%, var(--glow), transparent 70%),
+    repeating-linear-gradient(to right,  var(--rule) 0 1px, transparent 1px var(--rule-step)),
+    repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px var(--rule-step));
+  transition: background var(--mid) var(--ease);
+}
+/* The ruling is the one thing that reads as clutter behind a dense grid of
+   cards on a small screen, so it fades out with the corner marks. */
+@media (max-width: 760px) {
+  .bg { background: radial-gradient(70vmax 50vmax at 10% -10%, var(--glow), transparent 70%); }
 }
 
-/* corner marks — a rose (bottom right) and a pen nib (bottom left), fixed to
-   the viewport like .bg. Both sit in the black margin, never over content;
-   low opacity so they read as ambient texture, not illustration. Off on
-   small screens — there isn't room for them without crowding the grid. */
+/* Corner marks: unchanged artwork, fixed to the viewport, in the margin and
+   never over a card. On paper they switch to multiply so the rose sinks into
+   the sheet instead of sitting on top of it as a bright sticker. */
 .corner-mark {
-  position: fixed;
-  z-index: -1;
-  pointer-events: none;
-  user-select: none;
+  position: fixed; z-index: -1;
+  pointer-events: none; user-select: none;
+  mix-blend-mode: var(--mark-blend);
+  transition: opacity var(--mid) var(--ease);
 }
 .corner-mark--rose {
   right: clamp(-70px, -5vw, -24px);
   bottom: clamp(-80px, -6vw, -30px);
   width: clamp(240px, 27vw, 460px);
-  opacity: .2;
+  opacity: var(--mark-rose);
 }
-.corner-mark--pen {
-  left: clamp(-36px, -3vw, -8px);
-  bottom: clamp(54px, 9vh, 104px);
-  width: clamp(130px, 13vw, 200px);
-  opacity: .16;
-  transform: rotate(-9deg);
-}
-@media (max-width: 760px) {
-  .corner-mark { display: none; }
-}
+@media (max-width: 760px) { .corner-mark { display: none; } }
 
 .shell {
   max-width: var(--maxw);
@@ -116,24 +185,63 @@ h1, h2, p { margin: 0; }
 /* ================================================================= HEADER == */
 .head { margin-bottom: clamp(22px, 3.4vw, 34px); }
 
-/* wordmark ---------------------------------------------------------------- */
-/* One sheen sweeps across on load and settles to flat. background-size:300%
-   means the visible window is a third of the gradient — at both ends that
-   window is solid ink, so only the pass itself shows. */
+/* The emblem, at letterhead scale. It is not a hero image: it sits flush left
+   above the name, the way it does in the logo, and it is deliberately small
+   enough that the search field is still the first thing you can act on. */
+.logo {
+  display: block;
+  height: clamp(58px, 9vw, 84px);
+  width: auto;
+  margin-bottom: clamp(12px, 1.8vw, 18px);
+  user-select: none;
+  animation: logo-in .7s var(--ease) both;
+}
+:root[data-theme="light"] .logo--ink   { display: none; }
+:root[data-theme="dark"]  .logo--paper { display: none; }
+@keyframes logo-in { from { opacity: 0; transform: translateY(8px); } }
+
+/* Set from the logo, not from the old site: upright (the logo is not italic),
+   caps, and on a wide track. Uppercase serif at this size reads as a solid
+   block without the extra letter-spacing — the tracking is what turns it back
+   into the inscriptional lockup the emblem is drawn to sit above. */
 .wordmark {
   font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(50px, 12.5vw, 98px);
-  font-weight: 400;
-  letter-spacing: .015em;    /* Playfair italic still reads a touch narrow at display size — open it up rather than crowd it */
+  font-size: clamp(27px, 5.6vw, 47px);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .155em;
   line-height: 1.05;
-  margin-bottom: clamp(6px, 1.4vw, 10px);
+  /* tracking adds space after the final letter too — pull it back so the
+     wordmark still aligns flush left with the emblem and the tagline */
+  margin: 0 0 clamp(10px, 1.8vw, 16px) 0;
+  text-indent: .0em;
   user-select: none;
 }
+/* The sheen now reads from tokens, so it passes through the right champagne in
+   whichever theme is active. background-size:300% keeps both ends solid ink. */
+.wordmark span {
+  display: inline-block;
+  background: linear-gradient(100deg,
+              var(--ink)     0%,
+              var(--ink)    43%,
+              var(--accent) 52%,
+              var(--ink)    62%,
+              var(--ink)   100%);
+  background-size: 300% 100%;
+  background-position: 0 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: sheen 2.1s var(--ease) .45s both;   /* lands after the emblem */
+}
+@keyframes sheen {
+  from { background-position: 100% 0; opacity: 0; transform: translateY(10px); }
+  30%  { opacity: 1; transform: none; }
+  to   { background-position: 0 0;    opacity: 1; transform: none; }
+}
 
-/* tagline ------------------------------------------------------------------ */
 .tagline {
-  max-width: 68ch;           /* wide enough to hold the sentence on one line above ~560px */
+  max-width: 68ch;
   margin-bottom: clamp(26px, 5vw, 44px);
   font-size: 13.5px;
   line-height: 1.5;
@@ -141,26 +249,6 @@ h1, h2, p { margin: 0; }
   letter-spacing: -.006em;
 }
 .tagline__ch { margin-left: 1px; }
-.wordmark span {
-  display: inline-block;
-  background: linear-gradient(100deg,
-              #F2EFE9   0%,
-              #F2EFE9  43%,
-              #B9A77D  52%,
-              #F2EFE9  62%,
-              #F2EFE9 100%);
-  background-size: 300% 100%;
-  background-position: 0 0;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: sheen 2.1s var(--ease) .2s both;
-}
-@keyframes sheen {
-  from { background-position: 100% 0; opacity: 0; transform: translateY(10px); }
-  30%  { opacity: 1; transform: none; }
-  to   { background-position: 0 0;    opacity: 1; transform: none; }
-}
 
 /* search ------------------------------------------------------------------ */
 .search { position: relative; display: flex; align-items: center; max-width: 440px; }
@@ -174,7 +262,7 @@ h1, h2, p { margin: 0; }
 
 .search__input {
   width: 100%;
-  padding: 12px 40px 12px 40px;
+  padding: 12px 42px 12px 40px;
   font: inherit; font-size: 15px;
   color: var(--ink);
   background: var(--surface);
@@ -188,27 +276,51 @@ h1, h2, p { margin: 0; }
 .search__input:focus { outline: none; background: var(--surface-2); border-color: var(--line-2); }
 .search__input::-webkit-search-cancel-button { display: none; }
 
+/* "/" focuses the field from anywhere. The hint says so, then gets out of the
+   way the moment the field is in use — and it is display:none on touch, where
+   there is no key to press. */
+.search__hint {
+  position: absolute; right: 12px;
+  display: grid; place-items: center;
+  min-width: 19px; height: 19px; padding: 0 5px;
+  font: 500 11.5px/1 var(--font);
+  color: var(--ink-3);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  pointer-events: none;
+  transition: opacity var(--fast) var(--ease);
+}
+.search:focus-within .search__hint { opacity: 0; }
+@media (hover: none), (pointer: coarse) { .search__hint { display: none; } }
+
 .search__clear {
   position: absolute; right: 9px;
   display: grid; place-items: center;
   width: 24px; height: 24px;
   border: 0; border-radius: 50%;
-  background: rgba(244, 241, 234, .14); color: var(--ink);
+  background: var(--line-2); color: var(--ink);
   cursor: pointer;
   transition: background var(--fast) var(--ease);
 }
 .search__clear svg { width: 13px; height: 13px; }
-.search__clear:hover { background: rgba(244, 241, 234, .26); }
+.search__clear:hover { background: var(--line-2); filter: brightness(1.35); }
+/* 24px is the right size to draw; it is not a finger target. This grows the
+   hit area to 44×44 and draws nothing. Padding would move the icon off-centre. */
+.search__clear::before { content: ''; position: absolute; inset: -10px; }
 
 /* toolbar ----------------------------------------------------------------- */
 .toolbar {
   margin-top: clamp(22px, 4vw, 32px);
-  display: flex; align-items: center; gap: 10px;
+  display: flex; align-items: center; gap: 12px;
 }
-
 .chips { display: flex; gap: 6px; min-width: 0; flex: 1 1 auto; }
+.tools { flex: none; display: flex; align-items: center; gap: 6px; }
 
+/* Pill chips with a filled selected state — deliberately NOT the underlined
+   text-link treatment, which was tried and rejected. */
 .chip {
+  position: relative;
   padding: 7px 15px;
   border: 1px solid transparent;
   border-radius: 999px;
@@ -220,13 +332,32 @@ h1, h2, p { margin: 0; }
               background var(--fast) var(--ease),
               border-color var(--fast) var(--ease);
 }
+.chip::before { content: ''; position: absolute; inset: -6px 0; }  /* 48px tap target */
 .chip:hover { color: var(--ink); border-color: var(--line); }
 .chip[aria-selected="true"] {
   color: var(--ink); background: var(--surface-2); border-color: var(--line);
 }
 
+.seg {
+  display: flex; gap: 2px; padding: 2px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+}
+.seg__btn {
+  position: relative;
+  display: grid; place-items: center;
+  width: 32px; height: 30px;
+  border: 0; border-radius: 8px;
+  background: transparent; color: var(--ink-3);
+  cursor: pointer;
+  transition: color var(--fast) var(--ease), background var(--fast) var(--ease);
+}
+.seg__btn::before { content: ''; position: absolute; inset: -7px -6px; }  /* 44×44 tap target */
+.seg__btn svg { width: 16px; height: 16px; }
+.seg__btn:hover { color: var(--ink-2); }
+.seg__btn[aria-pressed="true"] { color: var(--ink); background: var(--surface-2); }
+
 .icon-btn {
-  flex: none;
+  position: relative;
   display: grid; place-items: center;
   width: 36px; height: 36px;
   border: 0; border-radius: 50%;
@@ -234,10 +365,17 @@ h1, h2, p { margin: 0; }
   cursor: pointer;
   transition: color var(--fast) var(--ease), background var(--fast) var(--ease);
 }
+.icon-btn::before { content: ''; position: absolute; inset: -4px; }
 .icon-btn svg { width: 17px; height: 17px; }
 .icon-btn:hover { color: var(--ink); background: var(--surface); }
 .icon-btn[aria-pressed="true"] { color: var(--accent); }
 .icon-btn[aria-pressed="true"] svg path { fill: currentColor; }
+
+/* The theme button swaps glyph with the theme: you see the moon at night and
+   the sun on paper, i.e. the state you are in, not the one you would get. */
+#themeBtn .icon-sun { display: none; }
+:root[data-theme="light"] #themeBtn .icon-moon { display: none; }
+:root[data-theme="light"] #themeBtn .icon-sun  { display: block; }
 
 @media (max-width: 700px) {
   .chips {
@@ -254,68 +392,126 @@ h1, h2, p { margin: 0; }
   letter-spacing: -.005em;
 }
 
-.grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-@media (min-width: 640px)  { .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
-@media (min-width: 980px)  { .grid { grid-template-columns: repeat(3, 1fr); } }
-@media (min-width: 1300px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+/* --------------------------------------------------------- the two views -- */
+/* One element per site. The container decides whether it is a card or a line
+   in an index; the nodes themselves never get rebuilt for a view change, which
+   is what makes them able to travel from one layout to the other. */
+.list--grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+@media (min-width: 640px)  { .list--grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
+@media (min-width: 980px)  { .list--grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1300px) { .list--grid { grid-template-columns: repeat(4, 1fr); } }
 
-/* ----------------------------------------------------------------- card -- */
-.card {
+.list--index { display: block; border-top: 1px solid var(--line); }
+
+.item {
   position: relative;
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px;
-  padding: 16px 17px;
-  background: var(--surface);
-  border: 1px solid var(--line);      /* always drawn — the grid is *set* */
-  border-radius: var(--r);
   transition: background var(--fast) var(--ease),
               border-color var(--fast) var(--ease),
               transform var(--fast) var(--ease);
-  animation: in var(--slow) var(--ease) backwards;
 }
-@keyframes in { from { opacity: 0; transform: translateY(7px); } }
+.item--enter { animation: enter var(--slow) var(--ease) backwards; }
+@keyframes enter { from { opacity: 0; transform: translateY(7px); } }
 
-/* transform makes a stacking context, so a hovered card must outrank its
-   later siblings or they paint over its tooltip */
-.card:hover, .card:focus-within {
-  background: var(--surface-2);
-  border-color: var(--line-2);
-  transform: translateY(-2px);
-  z-index: 20;
-}
+.item__link { position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.item__link:focus-visible { outline-offset: -4px; }
+.item--soon .item__link { cursor: default; }
 
-/* Dim the *text*, never the card — opacity on the card would fade the tooltip
-   inside it too, and a see-through tooltip is unreadable over the grid. */
-.card--soon .card__title { color: var(--ink-2); font-weight: 400; }
-.card--soon .card__meta  { color: #56534E; }
-
-.card__link { position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
-.card__link:focus-visible { outline-offset: -4px; }
-.card--soon .card__link { cursor: default; }
-
-.card__body { min-width: 0; display: flex; flex-direction: column; }
-
-.card__title {
-  font-size: 16px; font-weight: 500;
-  letter-spacing: -.021em; line-height: 1.3;
-}
-
-.card__meta {
-  margin-top: 3px;
-  font-size: 12.5px; color: var(--ink-3);
-  letter-spacing: -.004em;
+.item__title { font-size: 16px; font-weight: 500; letter-spacing: -.021em; line-height: 1.3; }
+.item__meta {
+  font-size: 12.5px; color: var(--ink-3); letter-spacing: -.004em;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+/* Dim the text, never the item — opacity on the container would fade the
+   tooltip inside it too, and a see-through tooltip is unreadable over a card. */
+.item--soon .item__title { color: var(--ink-2); font-weight: 400; }
 
-.card__aside { flex: none; display: flex; align-items: center; gap: 2px; color: var(--ink-3); }
-
-.card__ext {
+.item__aside { flex: none; display: flex; align-items: center; gap: 2px; color: var(--ink-3); }
+.item__ext {
   width: 13px; height: 13px;
   opacity: 0; transform: translateX(-3px);
   transition: opacity var(--fast) var(--ease), transform var(--fast) var(--ease),
               color var(--fast) var(--ease);
 }
-.card:hover .card__ext { opacity: 1; transform: none; color: var(--accent); }
+.item:hover .item__ext { opacity: 1; transform: none; color: var(--accent); }
+
+.item__num, .item__dots, .item__date { color: var(--ink-3); }
+.item__num, .item__date { font-variant-numeric: tabular-nums; font-size: 12px; }
+
+/* ----- grid view ---------------------------------------------------------- */
+.list--grid .item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "title aside" "meta aside";
+  align-items: center;
+  gap: 3px 12px;
+  padding: 16px 17px;
+  background: var(--surface);
+  border: 1px solid var(--line);   /* always drawn — the grid is *set* */
+  border-radius: var(--r);
+}
+.list--grid .item__title { grid-area: title; }
+.list--grid .item__meta  { grid-area: meta; }
+.list--grid .item__aside { grid-area: aside; }
+.list--grid .item__num,
+.list--grid .item__dots,
+.list--grid .item__date { display: none; }
+
+.list--grid .item:hover, .list--grid .item:focus-within {
+  background: var(--surface-2);
+  border-color: var(--line-2);
+  transform: translateY(-2px);
+  z-index: 20;                     /* transform makes a stacking context — the
+                                      tooltip would otherwise go under siblings */
+}
+
+/* ----- index view --------------------------------------------------------- */
+/* A notebook index: number, title, a dotted leader, tags, date. No card, no
+   fill — the hairline between rows is the whole structure. */
+.list--index .item {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 13px 8px;
+  border-bottom: 1px solid var(--line);
+}
+.list--index .item__num { flex: none; width: 2.4ch; text-align: right; }
+.list--index .item__title { flex: none; }
+.list--index .item__dots {
+  flex: 1 1 auto; min-width: 18px;
+  align-self: center;
+  height: 0;
+  border-bottom: 1px dotted var(--line-2);
+}
+.list--index .item__meta { flex: none; max-width: 40%; }
+.list--index .item__date { flex: none; }
+.list--index .item__aside { align-self: center; }
+.list--index .item:hover, .list--index .item:focus-within {
+  background: var(--surface);
+  z-index: 20;
+}
+
+/* On a phone an index row cannot hold five columns. It folds to exactly two
+   lines — title with its date, then the tags underneath, hanging off the same
+   indent as the title — and drops the dotted leader, which has nothing left to
+   lead across. The explicit `order` matters: without it the date wraps onto a
+   third line of its own and the row grows to ~117px, which is no longer an
+   index you can scan. */
+@media (max-width: 620px) {
+  .list--index .item {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 12px;
+    padding: 12px 6px;
+  }
+  .list--index .item__dots { display: none; }
+  .list--index .item__num   { order: 1; }
+  .list--index .item__title { order: 2; flex: 1 1 auto; min-width: 0; }
+  .list--index .item__date  { order: 3; margin-left: auto; }
+  .list--index .item__aside { order: 4; margin-left: 4px; }
+  .list--index .item__meta  {
+    order: 5;
+    flex: 1 1 100%; max-width: none;
+    margin: 2px 0 0 calc(2.4ch + 12px);
+  }
+}
 
 /* star -------------------------------------------------------------------- */
 .star {
@@ -325,18 +521,28 @@ h1, h2, p { margin: 0; }
   border: 0; border-radius: 50%;
   background: transparent; color: var(--ink-3);
   cursor: pointer; opacity: 0;
-  transition: opacity var(--fast) var(--ease), color var(--fast) var(--ease);
+  transition: opacity var(--fast) var(--ease), color var(--fast) var(--ease),
+              transform var(--fast) var(--ease);
 }
 .star svg { width: 15px; height: 15px; }
-.card:hover .star, .star:focus-visible { opacity: 1; }
+.item:hover .star, .star:focus-visible { opacity: 1; }
 .star:hover { color: var(--accent); }
 .star[aria-pressed="true"] { opacity: 1; color: var(--accent); }
 .star[aria-pressed="true"] svg path { fill: currentColor; }
-@media (hover: none) { .star { opacity: .45; } }
+.star--pop { animation: pop .32s var(--ease); }
+@keyframes pop { 40% { transform: scale(1.28); } }
+
+/* The star's hit area only grows on touch: it sits above .item__link, so a
+   44px zone would eat card clicks along the right edge on desktop, where a
+   mouse can hit 28px exactly. */
+@media (hover: none), (pointer: coarse) {
+  .star { opacity: .45; }
+  .star::before { content: ''; position: absolute; inset: -8px; }
+}
 
 /* ------------------------------------------------------------- tooltip --- */
-/* The caption exists only on hover, floating above the card. It never takes
-   up layout, so the grid stays perfectly still. */
+/* Hover-only, floating, in BOTH views. It never takes up layout, so neither
+   the grid nor the index ever shifts. */
 .tip {
   position: absolute;
   bottom: calc(100% + 10px);
@@ -346,13 +552,13 @@ h1, h2, p { margin: 0; }
   max-width: min(272px, 78vw);
   padding: 10px 14px;
   font-size: 12.8px; line-height: 1.48;
-  color: var(--ink);
+  color: var(--tip-ink);
   letter-spacing: -.006em;
   text-align: center;
-  background: rgba(26, 25, 23, .975);
-  border: .5px solid rgba(244, 241, 234, .14);
+  background: var(--tip-bg);
+  border: .5px solid var(--tip-line);
   border-radius: 10px;
-  box-shadow: 0 16px 40px -14px rgba(0, 0, 0, .9);
+  box-shadow: 0 16px 40px -14px rgba(0, 0, 0, .55);
   -webkit-backdrop-filter: saturate(170%) blur(20px);
   backdrop-filter: saturate(170%) blur(20px);
   opacity: 0; visibility: hidden;
@@ -363,54 +569,49 @@ h1, h2, p { margin: 0; }
               visibility 0s linear var(--fast);
   pointer-events: none;
 }
-.tip::after {                     /* the little arrow */
+.tip::after {
   content: '';
   position: absolute; top: 100%; left: 50%;
   width: 9px; height: 9px;
   margin: -5px 0 0 -4.5px;
   background: inherit;
-  border-right: .5px solid rgba(244, 241, 234, .14);
-  border-bottom: .5px solid rgba(244, 241, 234, .14);
+  border-right: .5px solid var(--tip-line);
+  border-bottom: .5px solid var(--tip-line);
   border-bottom-right-radius: 2px;
   transform: rotate(45deg);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .card:hover .tip, .card:focus-within .tip {
+  .item:hover .tip, .item:focus-within .tip {
     opacity: 1; visibility: visible;
     transform: translate(-50%, 0) scale(1);
     transition-delay: .1s, .1s, 0s;
   }
-}
-
-/* First row has nothing above it, so its tooltip flips underneath.
-   Scoped to hover devices: on touch the caption is a plain static line, and
-   these positioned/transform rules would otherwise drag it out of place. */
-@media (hover: hover) and (pointer: fine) {
-  .card--flip .tip {
+  /* Nothing sits above the first row, so its tooltip flips underneath.
+     This whole block stays inside the hover guard: on touch the caption is a
+     static line and a stray transform/top would drag it out of the item. */
+  .item--flip .tip {
     bottom: auto; top: calc(100% + 10px);
     transform-origin: 50% 0;
     transform: translate(-50%, -4px) scale(.97);
   }
-  .card--flip .tip::after {
+  .item--flip .tip::after {
     top: auto; bottom: 100%;
     margin: 0 0 -5px -4.5px;
     border: 0;
-    border-left: .5px solid rgba(244, 241, 234, .14);
-    border-top: .5px solid rgba(244, 241, 234, .14);
+    border-left: .5px solid var(--tip-line);
+    border-top: .5px solid var(--tip-line);
     border-top-left-radius: 2px;
   }
-  .card--flip:hover .tip, .card--flip:focus-within .tip {
+  .item--flip:hover .tip, .item--flip:focus-within .tip {
     transform: translate(-50%, 0) scale(1);
   }
 }
 
-/* Touch has no hover, so the caption drops into the flow as a quiet second
-   line — title, description, then tags. */
+/* Touch has no hover, so the caption drops into the flow as a quiet line. */
 @media (hover: none), (pointer: coarse) {
   .tip {
     position: static;
-    order: 2;
     opacity: 1; visibility: visible; transform: none;
     width: auto; max-width: none;
     padding: 0; margin-top: 4px;
@@ -420,18 +621,32 @@ h1, h2, p { margin: 0; }
     font-size: 13.5px; line-height: 1.5; color: var(--ink-2);
   }
   .tip::after { display: none; }
-  .card__meta { order: 3; margin-top: 8px; }
-  .card { align-items: flex-start; padding: 15px 16px; }
-  .card__aside { margin-top: 1px; }
+
+  .list--grid .item {
+    grid-template-areas: "title aside" "tip aside" "meta aside";
+    align-items: start;
+    padding: 15px 16px;
+  }
+  .list--grid .tip { grid-area: tip; }
+  .list--grid .item__meta { margin-top: 8px; }
+  .list--grid .item__aside { align-self: start; margin-top: 1px; }
+
+  /* In the index the caption would double every row's height, and the index
+     exists precisely to be scanned quickly. It stays hidden there. */
+  .list--index .tip { display: none; }
 }
 
 /* --------------------------------------------------------------- empty --- */
 .empty { padding: 56px 0; color: var(--ink-2); font-size: 15px; }
-.linklike { border: 0; background: none; padding: 0; color: var(--accent); cursor: pointer; }
+.linklike {
+  border: 0; background: none; padding: 0;
+  color: var(--accent); cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px;
+}
 
 /* =================================================================== FOOT == */
 .foot {
-  margin-top: auto;                 /* keeps the footer pinned on short pages */
+  margin-top: auto;
   padding: clamp(40px, 7vw, 68px) 0 max(30px, env(safe-area-inset-bottom));
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 12px 22px;
@@ -447,6 +662,8 @@ h1, h2, p { margin: 0; }
 .foot a:hover { color: var(--ink); }
 
 /* -------------------------------------------------------- a11y / motion -- */
+/* Extend this block if you add animation. The FLIP transition in app.js is
+   also gated in JS — CSS alone cannot cancel a Web Animations call. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: .001ms !important;
@@ -454,13 +671,32 @@ h1, h2, p { margin: 0; }
     transition-duration: .001ms !important;
   }
   .wordmark span { background-position: 0 0; opacity: 1; }
-  .card:hover { transform: none; }
+  .logo { opacity: 1; transform: none; }
+  .list--grid .item:hover { transform: none; }
 }
 
 @media print {
-  .bg, .corner-mark, .toolbar, .search, .star { display: none !important; }
+  .bg, .corner-mark, .toolbar, .search, .star, .skip-link { display: none !important; }
+  /* Paper prints on paper — the cream mark would come out as a ghost even if
+     the visitor was browsing in the dark theme when they hit print. */
+  .logo--ink   { display: none  !important; }
+  .logo--paper { display: block !important; }
   body { background: #fff; color: #000; }
-  .card { break-inside: avoid; border: 1px solid #ccc; }
+  .list--grid .item { break-inside: avoid; border: 1px solid #ccc; }
   .tip { position: static; opacity: 1; visibility: visible; transform: none;
          background: none; border: 0; box-shadow: none; color: #444; }
 }
+
+/* -----------------------------------------------------------------------------
+ *  Contrast, measured — not eyeballed. Every value below is the ratio against
+ *  that theme's --bg. The quiet greys are the ones that drift, so they carry
+ *  the note: --ink-3 was #6B6862 (3.54:1) on the old site and failed the 4.5:1
+ *  floor for body text. It carries the tagline, meta lines, count and footer.
+ *
+ *      ink        ink 13.6 : 1      paper 14.2 : 1
+ *      ink-2      ink  6.7 : 1      paper  6.7 : 1
+ *      ink-3      ink  4.8 : 1      paper  4.8 : 1
+ *      accent     ink  9.6 : 1      paper  5.0 : 1
+ *
+ *  Measure before retuning any of them darker.
+ * -------------------------------------------------------------------------- */
