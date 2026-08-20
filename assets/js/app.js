@@ -241,12 +241,20 @@
   }
 
   /* --------------------------------------------------------------- theme -- */
+  /* Ink is the default for everyone; the OS preference is deliberately not
+     consulted. See the note on the inline script in index.html. */
+  const THEME_CHROME = { dark: '#29221D', light: '#F5EDE1' };
+
   function applyTheme(theme, persist) {
     document.documentElement.dataset.theme = theme;
     el.themeBtn.setAttribute(
       'aria-label',
       theme === 'dark' ? 'Switch to paper theme' : 'Switch to ink theme'
     );
+    // Keep the browser chrome (address bar, status bar) with the page rather
+    // than leaving it on whatever the first paint happened to be.
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', THEME_CHROME[theme]);
     if (persist) store.write(THEME_KEY, theme);
   }
 
@@ -358,11 +366,6 @@
 
   let rt;
   addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(placeTooltips, 120); });
-
-  // Follow the OS only while the visitor has not made a choice of their own.
-  matchMedia('(prefers-color-scheme: light)').addEventListener?.('change', (e) => {
-    if (store.read(THEME_KEY, null) === null) applyTheme(e.matches ? 'light' : 'dark', false);
-  });
 
   /* ---------------------------------------------------------------- boot -- */
   applyTheme(document.documentElement.dataset.theme || 'dark', false);

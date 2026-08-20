@@ -181,6 +181,13 @@ h1, h2, p { margin: 0; }
   display: flex; flex-direction: column;
   min-height: 100svh;
 }
+/* The top padding is measured in vh, which is generous breathing room on a
+   desktop window and a dead zone on a phone: a tall handset makes 12vh ~150px,
+   so the logo starts a thumb-length down the screen with nothing above it.
+   Phones get a flat value instead — there is no room to spend up here. */
+@media (max-width: 760px) {
+  .shell { padding-top: 30px; }
+}
 
 /* ================================================================= HEADER == */
 .head { margin-bottom: clamp(22px, 3.4vw, 34px); }
@@ -377,6 +384,17 @@ h1, h2, p { margin: 0; }
 :root[data-theme="light"] #themeBtn .icon-moon { display: none; }
 :root[data-theme="light"] #themeBtn .icon-sun  { display: block; }
 
+/* On a phone the four tools eat ~160px of the row, which leaves the chips too
+   little and cuts "Picks by JYe" mid-word behind the fade. Giving the chips
+   the full width instead lets all three sit there uncut, with the tools on
+   their own line under them. */
+@media (max-width: 620px) {
+  .toolbar { flex-wrap: wrap; gap: 10px 12px; }
+  .chips   { flex: 1 1 100%; }
+  .tools   { margin-left: auto; }
+}
+/* Still scrollable as a fallback — a longer collection label, or a large
+   system font size, can outgrow even the full row. */
 @media (max-width: 700px) {
   .chips {
     overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;

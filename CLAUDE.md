@@ -146,9 +146,13 @@ everything else back automatically. No other field needs to change.
   explicit `order` values in that media query are load-bearing — without them
   the date wraps to a third line and the row grows to ~117px, which is no
   longer an index you can scan.
-- **Theme** — `ink` (default) or `paper`, persisted in `zibaldone.theme.v1`.
-  Until the visitor chooses, the page follows `prefers-color-scheme`. The
-  toggle shows the state you are **in** (moon at night, sun on paper).
+- **Theme** — `ink` or `paper`, persisted in `zibaldone.theme.v1`. **Ink is the
+  default for everyone on a first visit; the page deliberately does NOT follow
+  `prefers-color-scheme`** (owner's call, 2026-08-20 — the logo is cream on
+  brown and that is how the site should introduce itself). Paper is a choice
+  you make, and once made it is remembered. The `<meta name="theme-color">` has
+  no `media` attribute for the same reason and is updated by `applyTheme()`.
+  The toggle shows the state you are **in** (moon at night, sun on paper).
 - **Keyboard** — `/` focuses search; arrows walk the list. The column count is
   read from the live layout, never assumed. Arrow travel **skips `soon` items**:
   their overlay is a `<span>`, which cannot take focus, so landing on one would
@@ -310,6 +314,15 @@ Easy to break by accident:
   rhythm. The star's overlay is deliberately scoped to touch: it sits above
   `.item__link`, so a 44px zone on desktop would eat card clicks along the
   right edge.
+- **Don't size mobile spacing in `vh`.** `.shell` uses
+  `clamp(56px, 12vh, 120px)` on top, which is right on a desktop window and a
+  dead zone on a tall handset — 12vh there is ~150px of nothing above the
+  logo. Phones get a flat `30px` instead. Same trap applies to any new
+  viewport-relative spacing.
+- **The toolbar wraps below 620px.** The four tools eat ~160px, which cut
+  "Picks by JYe" mid-word behind the chip fade. Chips take the full row and
+  the tools drop underneath; the horizontal scroll stays as a fallback for
+  longer labels or large system font sizes. Don't un-wrap it to save a row.
 - Everything interactive needs a visible `:focus-visible` ring.
 - The whole card is the link (`.item__link` overlay); the star sits above it.
   On `soon` items that overlay is a `<span>` — see the keyboard note in § 5.

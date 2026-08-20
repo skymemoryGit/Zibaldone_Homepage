@@ -9,14 +9,39 @@ Update this in the same commit as the change it describes.
 
 | | |
 |---|---|
-| Phase | `v0.9` — logo-derived identity, ink/paper themes, grid/index views |
-| Live at | not deployed yet |
+| Phase | `v0.9.1` — logo-derived identity, ink/paper themes, grid/index views |
+| Live at | <https://zibaldone.ch> |
 | Repo | https://github.com/skymemoryGit/Zibaldone_Homepage |
 | Last update | 2026-08-20 |
 
 ---
 
 ## Changelog
+
+### v0.9.1 — 2026-08-20 — mobile header, default theme
+
+Three fixes, all from one screenshot of the live site on the owner's phone.
+
+- **Dead space above the logo.** `.shell` had `clamp(56px, 12vh, 120px)` of
+  top padding. On a tall handset 12vh is ~150px, so the logo started a
+  thumb-length down an empty screen. Phones now get a flat `30px`; the
+  desktop value is untouched. Lesson recorded in CLAUDE.md § 6: don't size
+  mobile spacing in `vh`.
+- **Ink is now the default theme for everyone**, instead of following
+  `prefers-color-scheme`. The owner's phone is in light mode, so the site was
+  introducing itself as paper — and the logo is cream on brown. Paper is still
+  one tap away and is still remembered once chosen. `<meta name="theme-color">`
+  lost its `media` attributes and is updated by `applyTheme()`, so the browser
+  chrome follows the page rather than the OS.
+- **"Picks by JYe" was being cut mid-word** on the chip row: the four tools
+  take ~160px, leaving the chips too little space, and the scroll-fade hid the
+  damage rather than showing it. Below 620px the toolbar now wraps — chips get
+  the full row (all three fit uncut at 375px), tools sit underneath. The
+  horizontal scroll stays as a fallback for longer labels or large system
+  font sizes.
+
+Not reported, spotted in the same screenshot — worth knowing: **the site is
+live at zibaldone.ch.** The Backlog below said otherwise and has been updated.
 
 ### v0.9 — 2026-08-20 — the logo becomes the design system
 
@@ -278,9 +303,9 @@ First build: search, two collections, favourites, responsive grid.
 - [x] **Real URLs for the own projects.** Pranzo, VPChess and Ravioli Milano
       are `live` at their `*.zibaldone.ch` subdomains. TapVision still needs
       one — flip it to `'live'` when it ships.
-- [ ] **Deploy.** GitHub Pages is least-effort given the repo. Point
-      `zibaldone.ch` at it, force HTTPS. (The three subdomains above will need
-      their own DNS + hosting too, whenever those projects are ready.)
+- [x] **Deploy.** Live at `zibaldone.ch` — confirmed from a screenshot of the
+      site on the owner's phone on 2026-08-20. (The three subdomains above
+      will still need their own DNS + hosting whenever those projects ship.)
 - [ ] **OG image**, 1200×630, so shared links aren't bare. The logo now gives
       an obvious source — the emblem on `#29221D` with the ruling is basically
       `tools/logo-source.png` already.
@@ -339,6 +364,7 @@ First build: search, two collections, favourites, responsive grid.
 | 2026-08-20 | Wordmark: Playfair Display **roman**, uppercase, wide tracking — reversing the "display italic" rule | The logo sets ZIBALDONE upright and in caps; the wordmark now matches it. Kept as live text rather than shipping the name as a second image, so it stays selectable and reflows. The 2026-08-16 positive-tracking decision still holds and matters more than ever here. |
 | 2026-08-20 | Site gains a second theme (ink / paper) and a second layout (grid / index) | Requested surprise, delivered as interaction rather than structure — no new sections, so the v0.3 rejection stands untouched. Both are the same items under different tokens/CSS; the index in particular is *the same DOM nodes*, which is what makes the FLIP motion honest. |
 | 2026-08-20 | Pen-nib corner mark removed | The logo is a quill. The two marks were saying the same thing twice. The rose stays — that was an explicit owner request and is a separate motif. |
+| 2026-08-20 | Ink is the default theme on a first visit; the site does not follow `prefers-color-scheme` | Owner's call after seeing the live site open in paper on a light-mode phone. The logo is cream on brown — that is how the site should introduce itself. Paper stays one tap away and is remembered once chosen, so nothing is taken from anyone who wants it. |
 | 2026-08-20 | One inline script allowed in `<head>`, breaking the "no inline scripts" rule | It stamps the saved theme before first paint. The alternative is a full-screen light flash for every ink-theme visitor on every navigation. Narrow, documented exception — don't "tidy" it into `app.js`. |
 
 ---
