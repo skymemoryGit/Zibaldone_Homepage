@@ -109,4 +109,13 @@ const SITES = [
     collection: 'picks',
     added: '2026-08-15',
   },
+  {
+    id: 'episodely',
+    name: 'Episodely',
+    url: 'https://episodely.tv/',
+    desc: 'Tracks shows and movies you have watched, with discussions.',
+    tags: ['Tracker', 'TV'],
+    collection: 'picks',
+    added: '2026-08-21',
+  },
 ];

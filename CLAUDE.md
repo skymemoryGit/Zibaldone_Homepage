@@ -16,11 +16,13 @@ directory**: a quiet grid of compact cards pointing to two kinds of things.
 | **Picks by JYe** | `picks` | Other people's sites worth keeping open |
 
 The reference was [LKs 网站推荐合集](https://github.com/xiangjianan/lks). The
-footer credit flipped twice on 2026-08-16 (removed, then re-added pointing at
-the live site instead of the GitHub repo) before settling on its current
+footer credit has flipped several times — removed and re-added twice on
+2026-08-16, then repointed on 2026-08-21 — before settling on its current
 form: "Powered by Jc.Ye · Inspired by LKS", both on one line, LKS linking to
-<https://lkssite.vip/>. See Decisions if you need the history; don't restyle
-this back onto two lines without asking — that was explicitly undone.
+<https://github.com/xiangjianan> (the person, not the `lks` repo or the
+`lkssite.vip` site). See Decisions if you need the history; don't restyle
+this back onto two lines, or repoint the link, without asking first — this
+one detail has changed four times already.
 
 ### The design brief — read this before proposing anything
 

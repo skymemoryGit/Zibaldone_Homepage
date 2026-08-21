@@ -9,14 +9,24 @@ Update this in the same commit as the change it describes.
 
 | | |
 |---|---|
-| Phase | `v0.9.1` — logo-derived identity, ink/paper themes, grid/index views |
+| Phase | `v0.9.2` — content + credit link update |
 | Live at | <https://zibaldone.ch> |
 | Repo | https://github.com/skymemoryGit/Zibaldone_Homepage |
-| Last update | 2026-08-20 |
+| Last update | 2026-08-21 |
 
 ---
 
 ## Changelog
+
+### v0.9.2 — 2026-08-21 — Episodely added, LKS credit repointed
+- **New pick: Episodely** (`episodely.tv`) — tracks shows/movies watched, with
+  episode discussions. `added: 2026-08-21`, so it sorts to the front of
+  "Picks by JYe" ahead of the four earlier picks, same as any new entry.
+- **Footer "LKS" link now points to <https://github.com/xiangjianan>**
+  (the person, not the `lks` repo or the `lkssite.vip` site) — owner's
+  explicit request. This is a fourth flip of this one link; see the Decisions
+  table below and the note in CLAUDE.md § 1 before changing it again without
+  being asked.
 
 ### v0.9.1 — 2026-08-20 — mobile header, default theme
 
@@ -355,6 +365,7 @@ First build: search, two collections, favourites, responsive grid.
 | 2026-08-16 | Full "luxury-editorial" restyle: gold/bronze `#c9a96e` accent replaces champagne `#B9A77D`, Playfair Display replaces Instrument Serif, cards/search/filters de-boxed | Explicit, detailed owner brief (15-point spec). Styling and UI/UX only — content, structure and functionality were explicitly required to stay unchanged, and did. |
 | 2026-08-16 | Rose corner mark recoloured red → monochrome bronze, opacity `.2 → .09` | Same brief: the red mark read as "too saturated/random" against the rest of the (now gold-only) system. Kept, not removed, since the owner said "if kept, make it monochrome" rather than "remove it". |
 | 2026-08-16 | LKs credit re-added to the footer, as a short "Inspired by LKS" line → lkssite.vip | Owner's call, same day as the removal above — reverses it a second time. Points at the live site now, not the GitHub repo. If this needs to change again, ask first; it's flipped twice in one day already. |
+| 2026-08-21 | "LKS" link repointed from lkssite.vip to github.com/xiangjianan | Owner's explicit request — credit the person behind the reference, not the live site. Fourth flip of this one link across the project's history; if it needs to change again, ask before assuming which target is meant (person / repo / site all have URLs on record). |
 | 2026-08-16 | The "luxury-editorial" restyle (previous row) is reverted in full — champagne, pill chips, boxed search, compact cards are back | Owner's verdict: "fa schifo… era molto meglio prima" (looks bad, much better before). Rejected outright, not iterated on. If a similar direction comes up again, ask before rebuilding it. |
 | 2026-08-16 | Wordmark keeps Playfair Display (not reverted to Instrument Serif), but at the original v0.6 size/weight/tracking | The one piece of the reverted pass the owner asked to keep — "al max tieni font del titolo" (at most, keep the title font). |
 | 2026-08-16 | Footer credit combined onto one line: "Powered by Jc.Ye · Inspired by LKS" | Owner's explicit ask, same message as the revert — as short as possible, link only on "LKS". |
