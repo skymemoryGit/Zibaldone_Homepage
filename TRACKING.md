@@ -9,7 +9,7 @@ Update this in the same commit as the change it describes.
 
 | | |
 |---|---|
-| Phase | `v0.9.2` — content + credit link update |
+| Phase | `v0.9.3` — footer cleanup + minimal privacy page |
 | Live at | <https://zibaldone.ch> |
 | Repo | https://github.com/skymemoryGit/Zibaldone_Homepage |
 | Last update | 2026-08-21 |
@@ -17,6 +17,26 @@ Update this in the same commit as the change it describes.
 ---
 
 ## Changelog
+
+### v0.9.3 — 2026-08-21 — LinkedIn removed, privacy.html added
+- **LinkedIn link removed from the footer.** Owner's request, no reason
+  logged. Footer now reads GitHub + Privacy.
+- **`privacy.html` added**, linked from the footer where LinkedIn used to be.
+  Deliberately short — this is a link directory, not an application, so there
+  is no account, no form and nothing to agree to:
+  - **No cookies.** None are set; there's no login or tracking to need one.
+  - **`localStorage` only**, and stays on the visitor's device: theme, layout
+    choice, and starred items (the same three keys documented in § 5). Never
+    sent anywhere.
+  - **One external request** — Google Fonts — disclosed with a link to
+    Google's own privacy policy rather than restating it.
+  - **No terms of service.** Said in one line, not a page: nothing here to
+    agree to.
+  - `<meta name="robots" content="noindex">` — a utility page, not something
+    meant to rank.
+  - Styled with the same tokens and `.shell`/`.foot` as the homepage (a new
+    `.legal` block, ~15 lines of CSS) — prose at a readable measure, not a
+    second design system.
 
 ### v0.9.2 — 2026-08-21 — Episodely added, LKS credit repointed
 - **New pick: Episodely** (`episodely.tv`) — tracks shows/movies watched, with

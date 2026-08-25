@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#29221D">
+<meta name="robots" content="noindex">
+
+<title>Privacy — Zibaldone</title>
+<meta name="description" content="What Zibaldone.ch stores, and what it doesn't.">
+
+<link rel="canonical" href="https://zibaldone.ch/privacy.html">
+<link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/favicon-180.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500&display=swap">
+
+<link rel="stylesheet" href="assets/css/style.css">
+
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('zibaldone.theme.v1');
+    document.documentElement.dataset.theme = saved === 'light' ? 'light' : 'dark';
+  } catch (e) { /* private mode */ }
+})();
+</script>
+</head>
+
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<div class="shell">
+  <main class="legal">
+    <a class="back" href="index.html">&larr; Zibaldone</a>
+
+    <h1>Privacy &amp; cookies</h1>
+    <p class="legal__updated">Last updated 2026-08-21</p>
+
+    <h2>Cookies</h2>
+    <p>This site sets none. There is no login, no analytics and no
+       advertising, so there's nothing for a cookie to do here.</p>
+
+    <h2>What's stored on your device</h2>
+    <p>Your theme (ink or paper), your chosen layout (grid or index), and any
+       items you've starred are saved in your browser's <code>localStorage</code>.
+       This never leaves your device and is not sent to us or anyone else.
+       Clearing your browser data clears it.</p>
+
+    <h2>What we don't collect</h2>
+    <p>No accounts, no forms, no tracking, no server-side logs tied to you.
+       We don't know who visits this page.</p>
+
+    <h2>One external request</h2>
+    <p>Fonts are loaded from Google Fonts, so your browser makes a request to
+       Google when you open this site. That request is subject to
+       <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google's own privacy policy</a>,
+       not ours.</p>
+
+    <p>This is a small link directory, not an application — there's no
+       account to create and nothing to agree to, so there are no separate
+       terms of service.</p>
+  </main>
+</div>
+</body>
+</html>

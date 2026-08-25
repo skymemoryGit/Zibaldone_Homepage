@@ -71,6 +71,7 @@ product is not.
 
 ```
 index.html                     markup; one inline script only — see below
+privacy.html                   privacy/cookies note — minimal, see § 5
 assets/css/style.css           all styling; design tokens in :root at the top
 assets/js/data.js              THE CONTENT. Editing the site = editing this file.
 assets/js/app.js               render + search + filter + saved + theme + views
