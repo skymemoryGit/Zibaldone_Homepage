@@ -9,14 +9,24 @@ Update this in the same commit as the change it describes.
 
 | | |
 |---|---|
-| Phase | `v0.9.3` — footer cleanup + minimal privacy page |
+| Phase | `v0.9.4` — TapVision goes live |
 | Live at | <https://zibaldone.ch> |
 | Repo | https://github.com/skymemoryGit/Zibaldone_Homepage |
-| Last update | 2026-08-21 |
+| Last update | 2026-09-08 |
 
 ---
 
 ## Changelog
+
+### v0.9.4 — 2026-09-08 — TapVision card goes live
+`url` set to `https://app.tapvision.it/` and `status: 'wip'` removed (defaults
+to `'live'`, same as every other shipped card). The card no longer dims, no
+longer shows "Soon", and the whole card is now a real link. `desc` and `tags`
+left as they were — still accurate.
+
+Note for later: `app.tapvision.it` is its own domain, not a `*.zibaldone.ch`
+subdomain like Pranzo/VPChess/Ravioli Milano. Fine as-is; flagging in case the
+subdomain convention was assumed to be universal.
 
 ### v0.9.3 — 2026-08-21 — LinkedIn removed, privacy.html added
 - **LinkedIn link removed from the footer.** Owner's request, no reason
@@ -331,8 +341,9 @@ First build: search, two collections, favourites, responsive grid.
 
 ### Next up
 - [x] **Real URLs for the own projects.** Pranzo, VPChess and Ravioli Milano
-      are `live` at their `*.zibaldone.ch` subdomains. TapVision still needs
-      one — flip it to `'live'` when it ships.
+      are `live` at their `*.zibaldone.ch` subdomains. TapVision shipped on
+      2026-09-08, at `app.tapvision.it` — a different domain, not a
+      `*.zibaldone.ch` subdomain like the other three.
 - [x] **Deploy.** Live at `zibaldone.ch` — confirmed from a screenshot of the
       site on the owner's phone on 2026-08-20. (The three subdomains above
       will still need their own DNS + hosting whenever those projects ship.)

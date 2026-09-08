@@ -64,11 +64,10 @@ const SITES = [
   {
     id: 'tapvision',
     name: 'TapVision',
-    url: '#',
+    url: 'https://app.tapvision.it/',
     desc: 'The project behind these small, fast-shipped experiments.',
     tags: ['Project', 'SaaS'],
     collection: 'mine',
-    status: 'wip',
     added: '2026-08-15',
   },
 
