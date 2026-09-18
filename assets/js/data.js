@@ -74,7 +74,7 @@ const SITES = [
     id: 'dottping',
     name: 'DottPing',
     url: 'https://t.me/DottPingBot',
-    desc: 'Pings you when a GP opens up in Veneto.',
+    desc: 'Alerts you when a doctor in Veneto has an opening.',
     tags: ['Bot', 'Telegram'],
     collection: 'mine',
     added: '2026-09-18',
