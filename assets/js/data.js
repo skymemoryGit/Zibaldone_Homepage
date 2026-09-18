@@ -70,6 +70,15 @@ const SITES = [
     collection: 'mine',
     added: '2026-08-15',
   },
+  {
+    id: 'dottping',
+    name: 'DottPing',
+    url: 'https://t.me/DottPingBot',
+    desc: 'Pings you when a GP opens up in Veneto.',
+    tags: ['Bot', 'Telegram'],
+    collection: 'mine',
+    added: '2026-09-18',
+  },
 
   /* --------------------------------------------------------------- picks -- */
   {

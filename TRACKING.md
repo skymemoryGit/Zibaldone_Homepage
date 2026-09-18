@@ -9,14 +9,31 @@ Update this in the same commit as the change it describes.
 
 | | |
 |---|---|
-| Phase | `v0.9.4` — TapVision goes live |
+| Phase | `v0.9.5` — DottPing added, TapVision description rewritten |
 | Live at | <https://zibaldone.ch> |
 | Repo | https://github.com/skymemoryGit/Zibaldone_Homepage |
-| Last update | 2026-09-08 |
+| Last update | 2026-09-18 |
 
 ---
 
 ## Changelog
+
+### v0.9.5 — 2026-09-18 — DottPing added, TapVision description rewritten
+- **New card: DottPing** (`t.me/DottPingBot`), in **Made by JYe**. A Telegram
+  bot that pings you when a GP (general practitioner) opens up in Veneto.
+  `added: 2026-09-18`, so it sorts to the front of "Made by JYe", ahead of
+  TapVision.
+- **TapVision's `desc` rewritten**, twice in the same session. First pass
+  ("SaaS for dynamic QR codes you can edit after printing") was accurate but
+  generic. A screenshot of the product's own pitch — "Un solo QR. Infinite
+  destinazioni." — showed the real hook is retargeting one printed code, not
+  "dynamic QR" as a category. Now: "One QR code, retargeted anytime —
+  reviews, website, menu." Tags moved from `['Project','SaaS']` to
+  `['SaaS','QR']` in the same pass, to match.
+- Caught and fixed while testing: the DottPing description shipped as 12
+  words, over the § 4 8–10 word cap (`desc` had said what the bot does *and*
+  restated "Telegram bot", redundant with the `Bot`/`Telegram` tags already
+  on the card). Trimmed to 9.
 
 ### v0.9.4 — 2026-09-08 — TapVision card goes live
 `url` set to `https://app.tapvision.it/` and `status: 'wip'` removed (defaults
