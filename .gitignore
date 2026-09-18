@@ -4,3 +4,11 @@ node_modules/
 *.log
 .vscode/
 .idea/
+
+# Internal working docs and raw source material — not read by index.html at
+# runtime, so hiding them changes nothing about the live site. README.md
+# stays tracked; it's the intentionally public-facing readme.
+CLAUDE.md
+TRACKING.md
+assets/logo/
+tools/
